@@ -1,4 +1,5 @@
 package GUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,13 +15,11 @@ public class GlobalFrame extends JFrame implements ActionListener {
     private JTextField txtOfNum;
     private JButton SubmitSize;
 
-
-
-    //constructor
-    public GlobalFrame(){
+    // constructor
+    public GlobalFrame() {
 
         // photo of app
-        String IconLoc = "D:/university/y2.term1/Numerical/project/phase1/untitled/src/GUI/logo.png";
+        String IconLoc = "src/GUI/logo.png";
         ImageIcon img = new ImageIcon(IconLoc);
         this.setIconImage(img.getImage());
 
@@ -31,7 +30,7 @@ public class GlobalFrame extends JFrame implements ActionListener {
         header.setVerticalAlignment(JLabel.CENTER);
         header.setBackground(new Color(0x000000));
         header.setForeground(new Color(0xFFFFFF));
-        header.setFont( new Font("Times New Roman", Font.PLAIN, 52) );
+        header.setFont(new Font("Times New Roman", Font.PLAIN, 52));
         header.setOpaque(true);
 
         // logic part
@@ -44,13 +43,13 @@ public class GlobalFrame extends JFrame implements ActionListener {
         LogicLabel = new JLabel();
         LogicLabel.setBounds(0, 100, 1400, 100);
         LogicLabel.setText("Enter the number of equations");
-        LogicLabel.setFont(new Font( "Times New Roman", Font.PLAIN, 50 ));
+        LogicLabel.setFont(new Font("Times New Roman", Font.PLAIN, 50));
         LogicLabel.setHorizontalAlignment(JLabel.CENTER);
 
         txtOfNum = new JTextField();
         txtOfNum.setBounds(600, 250, 200, 100);
         txtOfNum.setHorizontalAlignment(JTextField.CENTER);
-        txtOfNum.setFont( new Font( "Times New Roman", Font.PLAIN, 50 ) );
+        txtOfNum.setFont(new Font("Times New Roman", Font.PLAIN, 50));
 
         SubmitSize = new JButton("GO!");
         SubmitSize.setBounds(650, 400, 100, 50);
@@ -75,7 +74,7 @@ public class GlobalFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if( e.getSource() == SubmitSize ){
+        if (e.getSource() == SubmitSize) {
             NumofEquations = parseInt(txtOfNum.getText());
 
             LogicLabel.setVisible(false);
@@ -84,15 +83,13 @@ public class GlobalFrame extends JFrame implements ActionListener {
 
             new GridMatrix(Logic, NumofEquations);
 
-            //System.out.println(NumofEquations);
+            // System.out.println(NumofEquations);
         }
     }
 
-
     // Entering the number of equations:
-//    public int NumOfEqns(){
-//
-//    }
-
+    // public int NumOfEqns(){
+    //
+    // }
 
 }
