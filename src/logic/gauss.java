@@ -1,59 +1,80 @@
 package logic;
-
 public class gauss {
     private boolean valid = true;
     private double[][] arr2;
     private int n;
     private double[] b2;
 
+    // bonus part
+    private int scaling(int row) {
+        double[] temp = new double[n - row];
+        int maxIndex = row;
+        for (int i = row; i < n; i++) {
+            double mymax = arr2[i][i];
+            for (int j = row + 1; j < n; j++) {
+                if (arr2[i][j] > mymax) {
+                    mymax = arr2[i][j];
+                }
+            }
+            temp[i - row] = arr2[i][i] / mymax;
+        }
+        for (int i = 0; i < n - row - 1; i++) {
+            if (temp[i + 1] > temp[i])
+                maxIndex = i + 1 + row;
+        }
+        return maxIndex;
+    }
+
+    // applicable pivoting
+    private void pivoting(int row) {
+        int maxIndex = scaling(row);
+        if (arr2[row][maxIndex] != 0) {
+            if (maxIndex != row) {
+                double[] temp = new double[n];
+                temp = arr2[row];
+                arr2[row] = arr2[maxIndex];
+                arr2[maxIndex] = temp;
+                double temp2 = b2[row];
+                b2[row] = b2[maxIndex];
+                b2[maxIndex] = temp2;
+            }
+        } else
+            valid = false;
+    }
+
     // forward elimination function
-    private void forElimination(double[][] arr, double[] b) {
-        int n = arr.length;
+    private void forElimination() {
+        int n = arr2.length;
         for (int k = 0; k < n - 1 && valid; k++) {
             for (int i = k + 1; i < n; i++) {
-                // check division by zero and swap if possible
-                if (arr[k][k] == 0) {
-                    valid = false;
-                    for (int l = k + 1; l < n; l++) {
-                        if (arr[l][l] != 0) {
-                            double[] temp = new double[n];
-                            temp = arr[k];
-                            arr[k] = arr[l];
-                            arr[l] = temp;
-                            valid = true;
-                            break;
-                        }
-                    }
-                    if (!valid)
-                        break;
-                }
-                double factor = arr[i][k] / arr[k][k];
+                pivoting(i);
+                double factor = arr2[i][k] / arr2[k][k];
                 for (int j = k + 1; j < n; j++)
-                    arr[i][j] = arr[i][j] - factor * arr[k][j];
-                b[i] = b[i] - factor * b[k];
+                    arr2[i][j] = arr2[i][j] - factor * arr2[k][j];
+                b2[i] = b2[i] - factor * b2[k];
             }
         }
     }
 
     // backward substitution function
-    private void backSubstitution(double[][] arr, double[] b, double[] ans) {
-        int n = arr.length;
-        ans[n - 1] = b[n - 1] / arr[n - 1][n - 1];
+    private void backSubstitution(double[] ans) {
+        int n = arr2.length;
+        ans[n - 1] = b2[n - 1] / arr2[n - 1][n - 1];
         for (int i = n - 2; i >= 0; i--) {
             double sum = 0;
             for (int j = i + 1; j < n; j++) {
-                sum = sum + arr[i][j] * ans[j];
+                sum = sum + arr2[i][j] * ans[j];
             }
-            ans[i] = (b[i] - sum) / arr[i][i];
+            ans[i] = (b2[i] - sum) / arr2[i][i];
         }
     }
 
     // visible functions and constructor
     public double[] solve() {
         double[] ans = new double[n];
-        forElimination(arr2, b2);
+        forElimination();
         if (valid)
-            backSubstitution(arr2, b2, ans);
+            backSubstitution(ans);
         // if not valid return zeros
         return ans;
     }

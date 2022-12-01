@@ -28,13 +28,17 @@ public class GridMatrix implements ActionListener {
         variablesName = new JLabel[ NumofEquations ][ NumofEquations ];
         pocket = new JTextField[ NumofEquations ][ NumofEquations+1 ];
 
+        // distance added reversely relational with Number of equations
+        int distanceAdded = 50;
+
         //labels
         for (int i = 0; i < NumofEquations; i++) {
             for (int j = 0; j < NumofEquations; j++) {
+
                 String s = (j != NumofEquations - 1)? String.format(" x%d + ", j+1) : String.format(" x%d = ", j+1);
                 variablesName[i][j] = new JLabel(s);
-                variablesName[i][j].setBounds(startX+j*100 +100*(j+1) +100, startY+i*120, 80, 100);
-                variablesName[i][j].setFont(new Font( "Times New Roman", Font.PLAIN, 30 ));
+                variablesName[i][j].setBounds(startX + (2*j+2)*distanceAdded, startY + i * distanceAdded, 50, distanceAdded);
+                variablesName[i][j].setFont(new Font( "Times New Roman", Font.PLAIN, 20 ));
                 variablesName[i][j].setHorizontalAlignment(JLabel.CENTER);
                 Logic.add( variablesName[i][j] );
             }
@@ -43,7 +47,7 @@ public class GridMatrix implements ActionListener {
         for (int i = 0; i < NumofEquations; i++) {
             for (int j = 0; j <= NumofEquations; j++) {
                 pocket[i][j] = new JTextField();
-                pocket[i][j].setBounds(startX+j*100 + 100*(j+1), startY+i*120, 80, 80);
+                pocket[i][j].setBounds(startX + j * distanceAdded + distanceAdded * (j+1), startY + i * distanceAdded, 50, distanceAdded - 20);
                 pocket[i][j].setFont(new Font( "Times New Roman", Font.PLAIN, 30 ));
                 pocket[i][j].setHorizontalAlignment(JLabel.CENTER);
                 Logic.add( pocket[i][j] );

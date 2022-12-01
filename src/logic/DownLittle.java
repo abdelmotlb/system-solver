@@ -1,30 +1,23 @@
 package logic;
-public class gaussjordan {
+public class DownLittle {
     private boolean valid = true;
     private double[][] arr2;
     private int n;
     private double[] b2;
+    private double[] y;
+    private double[] ans;
 
     private int scaling(int row) {
         double[] temp = new double[n - row];
         int maxIndex = row;
         for (int i = row; i < n; i++) {
-            double mymax = arr2[i][row];
-            if (mymax <= 0)
-                mymax *= -1;
-
+            double mymax = arr2[i][i];
             for (int j = row + 1; j < n; j++) {
-                double toComp = arr2[i][j];
-                if (toComp < 0) {
-                    toComp *= -1;
-                }
-                if (toComp > mymax) {
-                    mymax = toComp;
+                if (arr2[i][j] > mymax) {
+                    mymax = arr2[i][j];
                 }
             }
-            temp[i - row] = arr2[i][row] / mymax;
-            if (temp[i - row] < 0)
-                temp[i - row] *= -1;
+            temp[i - row] = arr2[i][i] / mymax;
         }
         for (int i = 0; i < n - row - 1; i++) {
             if (temp[i + 1] > temp[i])
@@ -51,46 +44,54 @@ public class gaussjordan {
 
     private void forElimination() {
         int n = arr2.length;
-        for (int k = 0; k < n && valid; k++) {
-            pivoting(k);
-            double factor1 = arr2[k][k];
-
-            for (int l = k; l < n; l++) {
-                arr2[k][l] /= factor1;
-            }
-            b2[k] /= factor1;
+        for (int k = 0; k < n - 1 && valid; k++) {
             for (int i = k + 1; i < n; i++) {
-                double factor = arr2[i][k];
+                pivoting(i);
+                double factor = arr2[i][k] / arr2[k][k];
+                arr2[i][k] = factor;
                 for (int j = k + 1; j < n; j++)
                     arr2[i][j] = arr2[i][j] - factor * arr2[k][j];
-                b2[i] = b2[i] - factor * b2[k];
-            }
-            for (int i = k - 1; i >= 0; i--) {
-                double factor = arr2[i][k];
-                for (int j = k + 1; j < n; j++)
-                    arr2[i][j] = arr2[i][j] - factor * arr2[k][j];
-                b2[i] = b2[i] - factor * b2[k];
             }
         }
     }
 
+    private void backSubstitution() {
+        int n = arr2.length;
+        ans[n - 1] = y[n - 1] / arr2[n - 1][n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            double sum = 0;
+            for (int j = i + 1; j < n; j++) {
+                sum = sum + arr2[i][j] * ans[j];
+            }
+            ans[i] = (y[i] - sum) / arr2[i][i];
+        }
+    }
+
+    public void forSubstitution() {
+        y[0] = b2[0];
+        for (int i = 1; i < n; i++) {
+            double sum = 0;
+            for (int j = 0; j < i; j++) {
+                sum += (y[j] * arr2[i][j]);
+            }
+            y[i] = b2[i] - sum;
+        }
+    }
+
     public double[] solve() {
+        ans = new double[n];
+        y = new double[n];
         forElimination();
-        if (valid)
-            return b2;
-        else
-            return new double[n];
+        forSubstitution();
+        backSubstitution();
+        return ans;
     }
 
-    public boolean getValid() {
-        return this.valid;
-    }
-
-    public gaussjordan(double[][] arr, double[] b) {
+    public DownLittle(double[][] arr, double[] b) {
         this.n = arr.length;
-        // copy equations to keep original
         arr2 = new double[n][n];
         b2 = new double[n];
+        // copy equations to keep original
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 arr2[i][j] = arr[i][j];
@@ -98,5 +99,4 @@ public class gaussjordan {
             b2[i] = b[i];
         }
     }
-
 }
