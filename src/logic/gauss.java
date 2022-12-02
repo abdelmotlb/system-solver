@@ -1,9 +1,11 @@
 package logic;
+
 public class gauss {
     private boolean valid = true;
     private double[][] arr2;
     private int n;
     private double[] b2;
+    private long time;
 
     private int scaling(int row) {
         double[] temp = new double[n - row];
@@ -98,9 +100,11 @@ public class gauss {
     // visible functions and constructor
     public double[] solve() {
         double[] ans = new double[n];
+        time = System.nanoTime();
         forElimination();
         if (valid)
             backSubstitution(ans);
+        time = System.nanoTime() - time;
         // if not valid return zeros
         if (valid)
             return ans;
@@ -123,6 +127,10 @@ public class gauss {
             }
             b2[i] = b[i];
         }
+    }
+
+    public long getTime() {
+        return time;
     }
 
 }

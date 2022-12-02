@@ -1,9 +1,11 @@
 package logic;
+
 public class gaussjordan {
     private boolean valid = true;
     private double[][] arr2;
     private int n;
     private double[] b2;
+    private long time;
 
     private int scaling(int row) {
         double[] temp = new double[n - row];
@@ -86,7 +88,9 @@ public class gaussjordan {
     }
 
     public double[] solve() {
+        time = System.nanoTime();
         forElimination();
+        time = System.nanoTime() - time;
         if (valid)
             return b2;
         else
@@ -108,6 +112,10 @@ public class gaussjordan {
             }
             b2[i] = b[i];
         }
+    }
+
+    public long getTime() {
+        return time;
     }
 
 }

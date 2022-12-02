@@ -7,6 +7,7 @@ public class crout {
     private double[] y;
     private double[] ans;
     private boolean valid = true;
+    private long time;
 
     private int scaling(int row) {
         double[] temp = new double[n - row];
@@ -110,9 +111,11 @@ public class crout {
     public double[] solve() {
         ans = new double[n];
         y = new double[n];
+        time = System.nanoTime();
         forElimination();
         forSubstitution();
         backSubstitution();
+        time = System.nanoTime() - time;
         if (valid)
             return ans;
         else
@@ -134,5 +137,9 @@ public class crout {
 
     public boolean getValid() {
         return this.valid;
+    }
+
+    public long getTime() {
+        return time;
     }
 }

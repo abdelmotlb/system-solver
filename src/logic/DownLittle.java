@@ -1,4 +1,5 @@
 package logic;
+
 public class DownLittle {
     private boolean valid = true;
     private double[][] arr2;
@@ -6,6 +7,7 @@ public class DownLittle {
     private double[] b2;
     private double[] y;
     private double[] ans;
+    private long time;
 
     private int scaling(int row) {
         double[] temp = new double[n - row];
@@ -100,9 +102,11 @@ public class DownLittle {
     public double[] solve() {
         ans = new double[n];
         y = new double[n];
+        time = System.nanoTime();
         forElimination();
         forSubstitution();
         backSubstitution();
+        time = System.nanoTime() - time;
         return ans;
     }
 
@@ -121,5 +125,9 @@ public class DownLittle {
 
     public boolean getValid() {
         return this.valid;
+    }
+
+    public long getTime() {
+        return time;
     }
 }

@@ -8,6 +8,7 @@ public class chelosky {
     private double[] b2;
     private double[] y;
     private double[] ans;
+    private long time;
 
     public chelosky(double[][] arr, double[] b) {
         this.n = arr.length;
@@ -80,8 +81,8 @@ public class chelosky {
             }
         }
         // New U
-        for(int i = 0 ; i < n-1; i++){
-            for(int j = i+1 ; j < n; j++){
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
                 arr2[i][j] /= arr2[i][i];
             }
         }
@@ -101,8 +102,8 @@ public class chelosky {
         }
     }
 
-    public void DiagonalEvaluation(){
-        for(int i = 0; i < n; i++){
+    public void DiagonalEvaluation() {
+        for (int i = 0; i < n; i++) {
             y[i] /= arr2[i][i];
         }
     }
@@ -133,16 +134,21 @@ public class chelosky {
     public double[] solve() {
         ans = new double[n];
         y = new double[n];
+        time = System.nanoTime();
         forElimination();
         forSubstitution();
         DiagonalEvaluation();
         backSubstitution();
+        time = System.nanoTime() - time;
         return ans;
     }
 
-    public boolean getValid(){ return valid; }
+    public long getTime() {
+        return time;
+    }
 
+    public boolean getValid() {
+        return valid;
+    }
 
 }
-
-
