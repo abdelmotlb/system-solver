@@ -16,6 +16,11 @@ public class GaussSeidel {
     private double[] rel_error;
     private double  max_err= 0;
 
+    private int counter = 0;
+    private boolean valid = true;
+
+    public boolean getValid(){ return valid; }
+
 
     public GaussSeidel(double[][] a, double[] b, double[] x, double e, boolean error) {
         this.a = a;
@@ -29,56 +34,53 @@ public class GaussSeidel {
 
     }
 
-    int counter = 0;
+
 
     private void Algo(){
 
-        while (true){
+        try {
+            while (true){
 
-            // counter inc
-            counter++;
+                // counter inc
+                counter++;
+                if(counter == 101) { break; }
 
-//            for (int i = 0 ; i < n ; i++){
-//                x[i] = b[i];
-//                for (int j =0 ; j < n ; j++){
-//                    if (i != j){
-//                        x[i] -= a[i][j]*x[j] ;
-//                    }
-//                }
-//                x[i] = x[i] / a[i][i];
-//            }
+                for(int i = 0; i < n; i++) {
+                    double sum = b[i]; // b_n
+                    for (int j = 0; j < n; j++)
+                        if (j != i)
+                            sum -= a[i][j] * x[j];
 
-            for (int i = 0; i < n; i++) {
-                double sum = b[i]; // b_n
-                for (int j = 0; j < n; j++)
-                    if (j != i)
-                        sum -= a[i][j] * x[j];
-                // Update xi to use in the next
-                // row calculation
-                x[i] = 1 / a[i][i] * sum;
-            }
+                    // checking division by zero
+                    System.out.println("matrix :" + a[i][i]);
+                    if (a[i][i] == 0)
+                        throw new Exception();
 
-            System.out.println("counter : " + e);
-            System.out.println(Arrays.toString( x ));
-
-            // check ending iterations.
-            if (error == false) {
-                max_err =0;
-                for (int i = 0 ; i < n ;i++) {
-                    rel_error[i] = Math.abs(temp[i] - x[i])/Math.abs(x[i]);
-                    if (max_err < rel_error[i]) { max_err = rel_error[i]; }
+                    // Update xi to use in the next
+                    // row calculation
+                    x[i] = 1 / a[i][i] * sum;
                 }
-                if (max_err  <= e) {
-                    break;
+
+                // check ending iterations.
+                if (!error) {
+                    max_err =0;
+                    for (int i = 0 ; i < n ;i++) {
+                        rel_error[i] = Math.abs(temp[i] - x[i])/Math.abs(x[i]);
+                        System.out.println(x[i]);
+                        if (max_err < rel_error[i]) { max_err = rel_error[i]; }
+                    }
+                    if (max_err  <= e) {
+                        break;
+                    }
+                }else {
+                    e--;
+                    if ( e == 0 ){break;}
                 }
-            }else {
-                e--;
-                if (e==0){break;}
+                for(int i = 0 ; i < n ; i++){
+                    temp[i] = x[i] ;
+                }
             }
-            for(int i = 0 ; i < n ; i++){
-                temp[i] = x[i] ;
-            }
-        }
+        } catch (Exception e){ valid = false; }
 
     }
     public double[] solve(){

@@ -136,13 +136,21 @@ public class wayToSolve implements ActionListener {
 
                 choosenMethod = "GaussElimination";
                 gauss GaussObj = new gauss(cofficients, results);
-                conWithDisAns( GaussObj.solve() );
+                double [] ans = GaussObj.solve();
+
+                // validity
+                if( GaussObj.getValid() ) conWithDisAns( ans );
+                else CreateExpLab();
 
             } else if( e.getSource() == GaussJordan ){
 
                 choosenMethod = "GaussJordan";
                 gaussjordan JordanObj = new gaussjordan(cofficients, results);
-                conWithDisAns( JordanObj.solve() );
+                double [] ans = JordanObj.solve();
+
+                // validity
+                if( JordanObj.getValid() ) conWithDisAns( ans );
+                else CreateExpLab();
 
             } else if( e.getSource() == LUDecomposition ){
 
@@ -171,22 +179,42 @@ public class wayToSolve implements ActionListener {
             Downlittle.setVisible(false);
             Crout.setVisible(false);
             Cholesky.setVisible(false);
+            LUtxt.setVisible(false);
 
             // sensor of LU choices
 
             if( e.getSource() == Downlittle ){
-                //ClassOutput = "Downlittle";
+
                 System.out.println( "Downlittle" );
                 DownLittle LUObj = new DownLittle(cofficients, results);
-                conWithDisAns( LUObj.solve() );
+                double [] ans = LUObj.solve();
+                System.out.println("in Downlittle");
+
+                // validity
+                if( LUObj.getValid() ) conWithDisAns( ans );
+                else CreateExpLab();
+
             } else if( e.getSource() == Crout ){
-                //ClassOutput = "Crout";
+
                 System.out.println( "Crout" );
                 crout croutObj = new crout(cofficients, results);
-                conWithDisAns( croutObj.solve() );
+                double [] ans = croutObj.solve();
+
+                // validity
+                if( croutObj.getValid() ) conWithDisAns( ans );
+                else CreateExpLab();
+
             } else if( e.getSource() == Cholesky ){
-                //ClassOutput = "Cholesky";
+
                 System.out.println( "Cholesky" );
+                chelosky cheloskyObj = new chelosky(cofficients, results);
+
+                double[] ans = cheloskyObj.solve();
+
+                // validity
+                if( cheloskyObj.getValid() ) conWithDisAns( ans );
+                else CreateExpLab();
+
             }
         }
 
@@ -260,12 +288,22 @@ public class wayToSolve implements ActionListener {
             if( choosenMethod == "JacobiIteration" ){
 
                 // call jacobi method and get solution in SolutionArr the call connect
+                Jacobi JacobiObj = new Jacobi();
+                double[] ans = JacobiObj.solve(cofficients, results, initialGuessArr, NOI_RE, BooleanRE_NI);
+
+                // validity
+                if( JacobiObj.IsValid() ) conWithDisAns( ans );
+                else CreateExpLab();
 
             }else if( choosenMethod == "GaussSeidel" ){
 
                 // call GaussSeidel method and get solution in SolutionArr the call connect
                  GaussSeidel GaussSeidelObj = new GaussSeidel(cofficients, results, initialGuessArr, NOI_RE, BooleanRE_NI);
-                 conWithDisAns( GaussSeidelObj.solve() );
+                double[] ans = GaussSeidelObj.solve();
+
+                // validity
+                if( GaussSeidelObj.getValid() ) conWithDisAns( ans );
+                else CreateExpLab();
 
             }
 
@@ -357,6 +395,18 @@ public class wayToSolve implements ActionListener {
                 txtField.setForeground(Color.LIGHT_GRAY);
             }
         });
+    }
+
+    private void CreateExpLab(){
+        JLabel ExceptionLabel = new JLabel("the entered values generates dividing by zero");
+        ExceptionLabel.setBounds(400, 300, 600, 100);
+        ExceptionLabel.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+        ExceptionLabel.setHorizontalAlignment(JLabel.CENTER);
+        ExceptionLabel.setVerticalAlignment(JLabel.CENTER);
+        ExceptionLabel.setBackground(new Color(0, 0, 0));
+        ExceptionLabel.setForeground(new Color(255, 255, 255));
+        ExceptionLabel.setOpaque(true);
+        Logic.add(ExceptionLabel);
     }
 
 }

@@ -22,6 +22,10 @@ public class gaussjordan {
                     mymax = toComp;
                 }
             }
+            if (mymax == 0) {
+                valid = false;
+                return -1;
+            }
             temp[i - row] = arr2[i][row] / mymax;
             if (temp[i - row] < 0)
                 temp[i - row] *= -1;
@@ -35,18 +39,22 @@ public class gaussjordan {
 
     private void pivoting(int row) {
         int maxIndex = scaling(row);
-        if (arr2[row][maxIndex] != 0) {
-            if (maxIndex != row) {
-                double[] temp = new double[n];
-                temp = arr2[row];
-                arr2[row] = arr2[maxIndex];
-                arr2[maxIndex] = temp;
-                double temp2 = b2[row];
-                b2[row] = b2[maxIndex];
-                b2[maxIndex] = temp2;
-            }
+        if (maxIndex >= 0) {
+            if (arr2[row][maxIndex] != 0) {
+                if (maxIndex != row) {
+                    double[] temp = new double[n];
+                    temp = arr2[row];
+                    arr2[row] = arr2[maxIndex];
+                    arr2[maxIndex] = temp;
+                    double temp2 = b2[row];
+                    b2[row] = b2[maxIndex];
+                    b2[maxIndex] = temp2;
+                }
+            } else
+                valid = false;
         } else
             valid = false;
+
     }
 
     private void forElimination() {
@@ -54,7 +62,10 @@ public class gaussjordan {
         for (int k = 0; k < n && valid; k++) {
             pivoting(k);
             double factor1 = arr2[k][k];
-
+            if (factor1 == 0) {
+                valid = false;
+                return;
+            }
             for (int l = k; l < n; l++) {
                 arr2[k][l] /= factor1;
             }

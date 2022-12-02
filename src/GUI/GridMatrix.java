@@ -41,8 +41,7 @@ public class GridMatrix implements ActionListener {
                 String s = (j != NumofEquations - 1) ? String.format(" x%d + ", j + 1)
                         : String.format(" x%d = ", j + 1);
                 variablesName[i][j] = new JLabel(s);
-                variablesName[i][j].setBounds(startX + (2 * j + 2) * distanceAdded, startY + i * distanceAdded, 60,
-                        distanceAdded);
+                variablesName[i][j].setBounds(startX + (2 * j + 2) * distanceAdded, startY + i * distanceAdded, 60, distanceAdded);
                 variablesName[i][j].setFont(new Font("Times New Roman", Font.PLAIN, 20));
                 variablesName[i][j].setHorizontalAlignment(JLabel.CENTER);
                 Logic.add(variablesName[i][j]);
@@ -52,8 +51,7 @@ public class GridMatrix implements ActionListener {
         for (int i = 0; i < NumofEquations; i++) {
             for (int j = 0; j <= NumofEquations; j++) {
                 pocket[i][j] = new JTextField();
-                pocket[i][j].setBounds(startX + j * distanceAdded + distanceAdded * (j + 1), startY + i * distanceAdded,
-                        50, distanceAdded - 20);
+                pocket[i][j].setBounds(startX + j * distanceAdded + distanceAdded * (j + 1), startY + i * distanceAdded, 50, distanceAdded - 20);
                 pocket[i][j].setFont(new Font("Times New Roman", Font.PLAIN, 30));
                 pocket[i][j].setHorizontalAlignment(JLabel.CENTER);
                 Logic.add(pocket[i][j]);
@@ -81,12 +79,18 @@ public class GridMatrix implements ActionListener {
             for (int i = 0; i < NumofEquations; i++) {
                 for (int j = 0; j <= NumofEquations; j++) {
                     if (j != NumofEquations) {
-                        cofficients[i][j] = parseDouble(pocket[i][j].getText());
+
+                        try { cofficients[i][j] = parseDouble(pocket[i][j].getText()); }
+                        catch(NumberFormatException ea) { cofficients[i][j] = 0; }
                         variablesName[i][j].setVisible(false);
                         pocket[i][j].setVisible(false);
+
                     } else {
-                        results[i] = parseDouble(pocket[i][j].getText());
+
+                        try { results[i] = parseDouble(pocket[i][j].getText()); }
+                        catch(NumberFormatException ea) { results[i] = 0; }
                         pocket[i][j].setVisible(false);
+
                     }
                 }
             }

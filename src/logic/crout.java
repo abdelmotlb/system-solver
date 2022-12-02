@@ -83,6 +83,10 @@ public class crout {
                 }
                 sum += (y[j] * arr2[i][j]);
             }
+            if (arr2[i][i] == 0) {
+                valid = false;
+                return;
+            }
             y[i] = (b2[i] - sum) / arr2[i][i];
         }
     }

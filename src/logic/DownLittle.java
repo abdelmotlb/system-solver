@@ -17,6 +17,10 @@ public class DownLittle {
                     mymax = arr2[i][j];
                 }
             }
+            if (mymax == 0) {
+                valid = false;
+                return -1;
+            }
             temp[i - row] = arr2[i][i] / mymax;
         }
         for (int i = 0; i < n - row - 1; i++) {
@@ -28,18 +32,41 @@ public class DownLittle {
 
     private void pivoting(int row) {
         int maxIndex = scaling(row);
-        if (arr2[row][maxIndex] != 0) {
-            if (maxIndex != row) {
-                double[] temp = new double[n];
-                temp = arr2[row];
-                arr2[row] = arr2[maxIndex];
-                arr2[maxIndex] = temp;
-                double temp2 = b2[row];
-                b2[row] = b2[maxIndex];
-                b2[maxIndex] = temp2;
-            }
+        if (maxIndex >= 0) {
+            if (arr2[row][maxIndex] != 0) {
+                if (maxIndex != row) {
+                    double[] temp = new double[n];
+                    temp = arr2[row];
+                    arr2[row] = arr2[maxIndex];
+                    arr2[maxIndex] = temp;
+                    double temp2 = b2[row];
+                    b2[row] = b2[maxIndex];
+                    b2[maxIndex] = temp2;
+                }
+            } else
+                valid = false;
         } else
             valid = false;
+    }
+
+    private void backSubstitution() {
+        int n = arr2.length;
+        if (arr2[n - 1][n - 1] == 0) {
+            valid = false;
+            return;
+        }
+        ans[n - 1] = y[n - 1] / arr2[n - 1][n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            double sum = 0;
+            for (int j = i + 1; j < n; j++) {
+                sum = sum + arr2[i][j] * ans[j];
+            }
+            if (arr2[i][i] == 0) {
+                valid = false;
+                return;
+            }
+            ans[i] = (y[i] - sum) / arr2[i][i];
+        }
     }
 
     private void forElimination() {
@@ -47,23 +74,15 @@ public class DownLittle {
         for (int k = 0; k < n - 1 && valid; k++) {
             for (int i = k + 1; i < n; i++) {
                 pivoting(i);
+                if (arr2[k][k] == 0) {
+                    valid = false;
+                    return;
+                }
                 double factor = arr2[i][k] / arr2[k][k];
                 arr2[i][k] = factor;
                 for (int j = k + 1; j < n; j++)
                     arr2[i][j] = arr2[i][j] - factor * arr2[k][j];
             }
-        }
-    }
-
-    private void backSubstitution() {
-        int n = arr2.length;
-        ans[n - 1] = y[n - 1] / arr2[n - 1][n - 1];
-        for (int i = n - 2; i >= 0; i--) {
-            double sum = 0;
-            for (int j = i + 1; j < n; j++) {
-                sum = sum + arr2[i][j] * ans[j];
-            }
-            ans[i] = (y[i] - sum) / arr2[i][i];
         }
     }
 
@@ -98,5 +117,9 @@ public class DownLittle {
             }
             b2[i] = b[i];
         }
+    }
+
+    public boolean getValid() {
+        return this.valid;
     }
 }
