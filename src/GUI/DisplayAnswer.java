@@ -8,9 +8,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
 public class DisplayAnswer implements ActionListener {
-    private JButton goToNewProblem;
+    private MyButton goToNewProblem;
     private double[] SolutionArr;
     private JPanel Logic;
+    MyButton timeConsumed;
 
     public DisplayAnswer(JPanel Logic, double[] SolutionArr){
         this.Logic = Logic;
@@ -21,10 +22,10 @@ public class DisplayAnswer implements ActionListener {
     public void arrRepresentation(){
 
         // label above values
-        JLabel SolutionDomain = new JLabel("Solution Domain");
+        JLabel SolutionDomain = new JLabel("↓ Solution Domain ↓");
         SolutionDomain.setBounds(600, 20, 400, 60);
         SolutionDomain.setVerticalAlignment(JLabel.CENTER);
-        SolutionDomain.setForeground(new Color(16, 55, 128));
+        SolutionDomain.setForeground(GlobalFrame.usedColor);
         SolutionDomain.setFont( new Font("Times New Roman", Font.PLAIN, 40) );
         Logic.add(SolutionDomain);
 
@@ -32,28 +33,37 @@ public class DisplayAnswer implements ActionListener {
         MyButton[] solutionValues = new MyButton[ NumOfEquations ];
         for(int i = 0 ; i < NumOfEquations ; i++){
             solutionValues[i] = new MyButton( String.format("x%d = %f", i+1, SolutionArr[i]) );
-            solutionValues[i].setBounds(150 * (i+1), 100 * (i+1), 300, 80);
-            solutionValues[i].setFont( new Font("Times New Roman", Font.PLAIN, 50) );
-            solutionValues[i].setRadius(40);
+            solutionValues[i].setBounds(100 * (i+1) - 50, 60 * (i+1) - 50, 300, 50);
             solutionValues[i].setEnabled(false);
-            solutionValues[i].setBorder(null);
-            solutionValues[i].setForeground(new Color(255, 255, 255));
-            solutionValues[i].setBackground(new Color(0, 0, 0));
-            solutionValues[i].setColorClick(new Color(0, 0, 0));
-            solutionValues[i].setColor(new Color(16, 7, 7));
-            solutionValues[i].setColorOver(new Color(0, 0, 0));
-            Logic.add(solutionValues[i]);
+            displayAnswerColor(solutionValues[i], 30);
         }
 
-        goToNewProblem = new JButton("solve New problem!");
-        goToNewProblem.setBounds(950, 550, 400, 80);
-        goToNewProblem.setFont( new Font("Times New Roman", Font.PLAIN, 40) );
-        goToNewProblem.setBackground(new Color(0x263D88));
-        goToNewProblem.setForeground(new Color(0xFFFFFF));
+        timeConsumed = new MyButton( String.format("%f in ms", wayToSolve.gotTime / 1e6) );
+        timeConsumed.setBounds(20, 600, 300, 50);
+        timeConsumed.setEnabled(false);
+        displayAnswerColor(timeConsumed, 30);
+
+        goToNewProblem = new MyButton("solve New problem!");
+        goToNewProblem.setBounds(950, 250, 400, 80);
+        displayAnswerColor(goToNewProblem, 60);
+        goToNewProblem.setColor(GlobalFrame.usedColor);
+        goToNewProblem.setColorOver(GlobalFrame.secUsedColor);
         goToNewProblem.addActionListener(this);
         Logic.add(goToNewProblem);
 
         System.out.println("in arrRepresentatioin");
+    }
+
+    public void displayAnswerColor(MyButton but, int size){
+        but.setFont( new Font("Times New Roman", Font.PLAIN, 30) );
+        but.setRadius(40);
+        but.setBorder(null);
+        but.setForeground(new Color(255, 255, 255));
+        but.setBackground(GlobalFrame.usedColor);
+        but.setColorClick(GlobalFrame.usedColor);
+        but.setColor(new Color(255, 255, 255));
+        but.setColorOver(GlobalFrame.usedColor);
+        Logic.add(but);
     }
 
     @Override

@@ -44,6 +44,7 @@ public class GridMatrix implements ActionListener {
                 variablesName[i][j].setBounds(startX + (2 * j + 2) * distanceAdded, startY + i * distanceAdded, 60, distanceAdded);
                 variablesName[i][j].setFont(new Font("Times New Roman", Font.PLAIN, 20));
                 variablesName[i][j].setHorizontalAlignment(JLabel.CENTER);
+                variablesName[i][j].setForeground(GlobalFrame.secUsedColor);
                 Logic.add(variablesName[i][j]);
             }
         }
@@ -60,8 +61,9 @@ public class GridMatrix implements ActionListener {
 
         GotoType = new JButton("GotoType");
         GotoType.setBounds(1250, 600, 100, 50);
-        GotoType.setBackground(new Color(0x263D88));
+        GotoType.setBackground(GlobalFrame.usedColor);
         GotoType.setForeground(new Color(0xFFFFFF));
+        GotoType.setFont(new Font("Arial", Font.BOLD, 10));
         GotoType.addActionListener(this);
         Logic.add(GotoType);
 
