@@ -1,17 +1,20 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 
 public class GlobalFrame extends JFrame implements ActionListener {
     public static int precision;
-    public static boolean useScaling = true;
-    public static final Color usedColor = new Color(0x103780);
-    public static final Color secUsedColor = new Color(0x1E59C7);
+    public static boolean useScaling = true; // GlobalFrame.useScaling
+    public static final Color usedColor = new Color(0xFFFFFF);
+    public static final Color secUsedColor = new Color(0x051F2A);
+    public static final Color background = new Color(0x063548);
 
 
     private int NumofEquations;
@@ -23,9 +26,13 @@ public class GlobalFrame extends JFrame implements ActionListener {
     private JLabel scalingLabel;
     private JButton scalingBut;
     private JButton SubmitSize;
+    private JButton tempBut;
 
     // constructor
     public GlobalFrame() {
+
+
+
 
         // photo of app
         String IconLoc = "src/GUI/logo.png";
@@ -44,10 +51,17 @@ public class GlobalFrame extends JFrame implements ActionListener {
 
         // logic part
         Logic = new JPanel();
-        Logic.setBounds(0, 100, 1400, 700);
-        Logic.setBackground(new Color(0x121436));
+        Logic.setBounds(0, 100, 1400, 800);
+        Logic.setBackground(background);
         Logic.setOpaque(true);
-        Logic.setLayout(null);
+        Logic.setLayout(new BorderLayout());
+        Logic.setBorder(new EmptyBorder(800, 1400, 0, 0));
+        //        Logic.setLayout(null);
+
+
+//        // temp but
+//        JButton but = new JButton("temp");
+//        setBounds(1500, 900, 200, 100);
 
         // get number of equations
         NumEqLabel = new JLabel();
@@ -83,7 +97,7 @@ public class GlobalFrame extends JFrame implements ActionListener {
 
         scalingBut = new JButton("use Scaling");
         scalingBut.setBounds(550, 600, 300, 50);
-        scalingBut.setBackground(Color.black);
+        scalingBut.setBackground(secUsedColor);
         scalingBut.setForeground(new Color(0xFFFFFF));
         scalingBut.setFont(new Font("Arial", Font.BOLD, 20));
         scalingBut.addActionListener(this);
@@ -91,11 +105,17 @@ public class GlobalFrame extends JFrame implements ActionListener {
 
         // submission button
         SubmitSize = new JButton("GO!");
-        SubmitSize.setBounds(1250, 600, 100, 50);
-        SubmitSize.setBackground(usedColor);
-        SubmitSize.setForeground(new Color(0xFFFFFF));
+        SubmitSize.setBounds(1150, 680, 200, 50);
+        SubmitSize.setBackground(secUsedColor);
+        SubmitSize.setForeground(usedColor);
         SubmitSize.setFont(new Font("Arial", Font.BOLD, 20));
         SubmitSize.addActionListener(this);
+
+        tempBut = new JButton();
+        tempBut.setBackground(background);
+        tempBut.setEnabled(false);
+        tempBut.setBorder(null);
+        tempBut.setBounds(1300, 700, 1, 1);
 
         // frame settings
         this.setTitle("Matrix solver");
@@ -103,7 +123,7 @@ public class GlobalFrame extends JFrame implements ActionListener {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(null);
+
         Logic.add(NumEqLabel);
         Logic.add(txtOfNum);
         Logic.add(precisionLabel);
@@ -111,16 +131,36 @@ public class GlobalFrame extends JFrame implements ActionListener {
         Logic.add(scalingLabel);
         Logic.add(scalingBut);
         Logic.add(SubmitSize);
-        this.add(Logic);
-        this.add(header);
+        Logic.add(tempBut);
+
+
+
+//        // scroll:
+//        JScrollPane scrollPane = new JScrollPane(Logic, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+//        scrollPane.setPreferredSize(new Dimension(1200, 400));
+//        scrollPane.setVisible(true);
+//        Logic.add(scrollPane);
+//        this.add(S);
+
+//        this.add(Logic);
+        JScrollPane scroller = new JScrollPane(Logic);
+        this.add(BorderLayout.CENTER, scroller);
+        scroller.setWheelScrollingEnabled(true);
+        scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+//        this.add(header);
         this.setVisible(true);
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == SubmitSize) {
-            NumofEquations = parseInt(txtOfNum.getText());
-            precision = parseInt(txtOfPrecision.getText());
+            try { NumofEquations = parseInt(txtOfNum.getText()); }
+            catch(NumberFormatException ea) { NumofEquations = 5; } // default NumOfEquations
+
+            try { precision = parseInt(txtOfPrecision.getText()); }
+            catch(NumberFormatException ea) { precision = 8; } // default precision
 
             NumEqLabel.setVisible(false);
             txtOfNum.setVisible(false);
@@ -129,6 +169,7 @@ public class GlobalFrame extends JFrame implements ActionListener {
             SubmitSize.setVisible(false);
             scalingLabel.setVisible(false);
             scalingBut.setVisible(false);
+            tempBut.setVisible(false);
 
 
             new GridMatrix(Logic, NumofEquations);

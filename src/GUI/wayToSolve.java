@@ -2,12 +2,15 @@ package GUI;
 import logic.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Arrays;
+
+import static java.lang.Integer.parseInt;
 
 public class wayToSolve implements ActionListener {
     public static double gotTime;
@@ -19,7 +22,7 @@ public class wayToSolve implements ActionListener {
     private MyButton LUDecomposition;
     private MyButton GaussSeidel;
     private MyButton JacobiIteration;
-
+    private JButton tempBut;
     // LU Buttons and label
     private JLabel LUtxt;
     private MyButton Downlittle;
@@ -51,12 +54,16 @@ public class wayToSolve implements ActionListener {
 
     public void displayChoices(){
 
+        // update border
+        Logic.setBorder(new EmptyBorder(750, 1350, 0, 0));
+
+
         txt = new JLabel("choose the type you want");
         txt.setBounds(500, 300, 500, 100);
         txt.setFont(new Font("Times New Roman", Font.PLAIN, 40));
         txt.setHorizontalAlignment(JLabel.CENTER);
         txt.setVerticalAlignment(JLabel.CENTER);
-        txt.setBackground(new Color(0, 0, 0));
+        txt.setBackground(GlobalFrame.background);
         txt.setForeground(new Color(255, 255, 255));
         txt.setOpaque(true);
         Logic.add(txt);
@@ -85,6 +92,8 @@ public class wayToSolve implements ActionListener {
         JacobiIteration.setBounds(950, 450, 200, 200);
         JacobiIteration.addActionListener(this);
         ButtonDisplay(JacobiIteration);
+
+        editButtonsDisplay();
 
     }
 
@@ -118,6 +127,8 @@ public class wayToSolve implements ActionListener {
         Cholesky.addActionListener(this);
         ButtonDisplay(Cholesky);
 
+        editButtonsDisplay();
+
     }
 
 
@@ -126,6 +137,7 @@ public class wayToSolve implements ActionListener {
 
         // hide the page and appear the solution
         if( e.getSource() == GaussElimination || e.getSource() == GaussJordan || e.getSource() == LUDecomposition || e.getSource() == GaussSeidel || e.getSource() == JacobiIteration ){
+
             txt.setVisible(false);
             GaussElimination.setVisible(false);
             GaussJordan.setVisible(false);
@@ -133,21 +145,27 @@ public class wayToSolve implements ActionListener {
             GaussSeidel.setVisible(false);
             JacobiIteration.setVisible(false);
 
+
             if( e.getSource() == GaussElimination ){
 
+                tempBut.setVisible(false);
                 choosenMethod = "GaussElimination";
                 gauss GaussObj = new gauss(cofficients, results);
+                System.out.println( "before solve" );
                 double [] ans = GaussObj.solve();
+                System.out.println( "after solve" );
 
                 // validity
                 if( GaussObj.getValid() ) {
                     gotTime = GaussObj.getTime();
+                    System.out.println( Arrays.toString( ans ) );
                     conWithDisAns( ans );
                 }
                 else CreateExpLab();
 
             } else if( e.getSource() == GaussJordan ){
 
+                tempBut.setVisible(false);
                 choosenMethod = "GaussJordan";
                 gaussjordan JordanObj = new gaussjordan(cofficients, results);
                 double [] ans = JordanObj.solve();
@@ -187,6 +205,7 @@ public class wayToSolve implements ActionListener {
             Crout.setVisible(false);
             Cholesky.setVisible(false);
             LUtxt.setVisible(false);
+            tempBut.setVisible(false);
 
             // sensor of LU choices
 
@@ -271,11 +290,13 @@ public class wayToSolve implements ActionListener {
 
             ShowSolAIterAddData = new JButton("Show the Solution");
             ShowSolAIterAddData.setBounds(600, 600, 300, 50);
-            ShowSolAIterAddData.setBackground(GlobalFrame.usedColor);
+            ShowSolAIterAddData.setBackground(GlobalFrame.secUsedColor);
             ShowSolAIterAddData.setForeground(new Color(0xFFFFFF));
             ShowSolAIterAddData.setFont( new Font("Times New Roman", Font.BOLD, 30) );
             ShowSolAIterAddData.addActionListener(this);
             Logic.add(ShowSolAIterAddData);
+
+            editButtonsDisplay();
         }
 
         else if( e.getSource() == ShowSolAIterAddData ) {
@@ -288,11 +309,16 @@ public class wayToSolve implements ActionListener {
             NumOfIterationsB.setVisible(false);
             if( BooleanRE_NI ) NumOfIterationsTF.setVisible(false);
             ShowSolAIterAddData.setVisible(false);
+            tempBut.setVisible(false);
 
             // store user data
             int NumOfEquations = results.length;
             initialGuessArr = new double[ NumOfEquations ];
             for(int i = 0; i < NumOfEquations; i++){
+
+                try { initialGuessArr[i] = Double.parseDouble( intialGuessTF[i].getText() ); }
+                catch(NumberFormatException ea) { initialGuessArr[i] = 1; } // default initial guess
+
                 initialGuessArr[i] = Double.parseDouble( intialGuessTF[i].getText() );
             }
             if( !BooleanRE_NI )NOI_RE = Double.parseDouble( RelativeErrorTF.getText() );
@@ -311,6 +337,7 @@ public class wayToSolve implements ActionListener {
                 if( JacobiObj.IsValid() ) {
                     gotTime = JacobiObj.getTime();
                     conWithDisAns( ans );
+                    System.out.println( "in jacobi: valid" );
                 }
                 else CreateExpLab();
 
@@ -345,16 +372,18 @@ public class wayToSolve implements ActionListener {
 
     private void userIntialGuessDisplay(){
 
+        int NumOfEquations = results.length;
+        Logic.setBorder(new EmptyBorder(800,150 + (NumOfEquations)*100,0, 0));
+
         // initial Guess Label
         intialGuessLabel = new JLabel("intial guass you want to use");
         intialGuessLabel.setBounds(500, 20, 400, 60);
         intialGuessLabel.setHorizontalAlignment(JLabel.CENTER);
-        intialGuessLabel.setForeground(GlobalFrame.usedColor);
+        intialGuessLabel.setForeground(Color.black);
         intialGuessLabel.setFont( new Font("Times New Roman", Font.BOLD, 30) );
         Logic.add(intialGuessLabel);
 
         // text fields
-        int NumOfEquations = results.length;
         intialGuessTF  = new JTextField[ NumOfEquations ];
         for(int i = 0; i < NumOfEquations; i++){
             intialGuessTF[i] = new JTextField();
@@ -370,7 +399,7 @@ public class wayToSolve implements ActionListener {
         RelativeErrorB.setFont(new Font( "Times New Roman", Font.BOLD, 30 ));
         RelativeErrorB.setBounds(100, 300, 500, 50);
         RelativeErrorB.setHorizontalAlignment(JButton.CENTER);
-        RelativeErrorB.setBackground(GlobalFrame.usedColor);
+        RelativeErrorB.setBackground(GlobalFrame.secUsedColor);
         RelativeErrorB.setForeground(new Color(0xFFFFFF));
         RelativeErrorB.addActionListener(this);
         Logic.add(RelativeErrorB);
@@ -380,20 +409,22 @@ public class wayToSolve implements ActionListener {
         NumOfIterationsB.setFont(new Font( "Times New Roman", Font.BOLD, 30 ));
         NumOfIterationsB.setBounds(800, 300, 500, 50);
         NumOfIterationsB.setHorizontalAlignment(JButton.CENTER);
-        NumOfIterationsB.setBackground(GlobalFrame.usedColor);
+        NumOfIterationsB.setBackground(GlobalFrame.secUsedColor);
         NumOfIterationsB.setForeground(new Color(0xFFFFFF));
         NumOfIterationsB.addActionListener(this);
         Logic.add(NumOfIterationsB);
+
+        editButtonsDisplay();
 
     }
 
     private void ButtonDisplay(MyButton but){
         but.setRadius(200);
         but.setForeground(Color.white);
-        but.setBackground(GlobalFrame.usedColor);
-        but.setColorClick(GlobalFrame.usedColor);
-        but.setColor(GlobalFrame.usedColor);
-        but.setColorOver(GlobalFrame.secUsedColor);
+        but.setBackground(GlobalFrame.secUsedColor);
+        but.setColorClick(GlobalFrame.secUsedColor);
+        but.setColor(GlobalFrame.secUsedColor);
+        but.setColorOver(GlobalFrame.background);
         but.setFont(new Font("MV Boli", Font.ITALIC, 20));
         but.setBorder(null);
         Logic.add(but);
@@ -419,6 +450,15 @@ public class wayToSolve implements ActionListener {
         });
     }
 
+    public void editButtonsDisplay(){
+        tempBut = new JButton();
+        tempBut.setBounds(1600, 900, 0, 1);
+        tempBut.setBackground(GlobalFrame.background);
+        tempBut.setBorder(null);
+        tempBut.setEnabled(false);
+        Logic.add(tempBut);
+    }
+
     private void CreateExpLab(){
         JLabel ExceptionLabel = new JLabel("the entered values generates dividing by zero");
         ExceptionLabel.setBounds(400, 300, 600, 100);
@@ -429,6 +469,8 @@ public class wayToSolve implements ActionListener {
         ExceptionLabel.setForeground(new Color(255, 255, 255));
         ExceptionLabel.setOpaque(true);
         Logic.add(ExceptionLabel);
+        editButtonsDisplay();
+        System.out.println("in exception");
     }
 
 }

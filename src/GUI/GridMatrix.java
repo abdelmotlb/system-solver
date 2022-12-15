@@ -1,6 +1,7 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,7 @@ public class GridMatrix implements ActionListener {
     private double results[];
     private JButton GotoType;
     private int NumofEquations;
+    JButton tempBut;
 
     GridMatrix(JPanel Logic, int NumofEquations) {
         this.Logic = Logic;
@@ -25,11 +27,13 @@ public class GridMatrix implements ActionListener {
     }
 
     public void EquationsLayout() {
+
         // int startX = (1400 - 120 * (NumofEquations + 1)) / 2, startY = 10 * (10 -
         // NumofEquations + 1);
-        int startX = (1400 - 120 * (NumofEquations + 1)) / 2, startY = (10 + (700 - 70 * NumofEquations)) / 2;
+        int startX = 100, startY = 50;
         variablesName = new JLabel[NumofEquations][NumofEquations];
         pocket = new JTextField[NumofEquations][NumofEquations + 1];
+        Logic.setBorder(new EmptyBorder(100 + NumofEquations * 60,150 + (NumofEquations*2+2)*60,0, 0));
 
         // distance added reversely relational with Number of equations
         int distanceAdded = 60;
@@ -44,7 +48,7 @@ public class GridMatrix implements ActionListener {
                 variablesName[i][j].setBounds(startX + (2 * j + 2) * distanceAdded, startY + i * distanceAdded, 60, distanceAdded);
                 variablesName[i][j].setFont(new Font("Times New Roman", Font.PLAIN, 20));
                 variablesName[i][j].setHorizontalAlignment(JLabel.CENTER);
-                variablesName[i][j].setForeground(GlobalFrame.secUsedColor);
+                variablesName[i][j].setForeground(Color.white);
                 Logic.add(variablesName[i][j]);
             }
         }
@@ -60,12 +64,18 @@ public class GridMatrix implements ActionListener {
         }
 
         GotoType = new JButton("GotoType");
-        GotoType.setBounds(1250, 600, 100, 50);
-        GotoType.setBackground(GlobalFrame.usedColor);
+        GotoType.setBounds(50 + (NumofEquations*2+1)*60,50 + NumofEquations * 60, 150, 50);
+        GotoType.setBackground(GlobalFrame.secUsedColor);
         GotoType.setForeground(new Color(0xFFFFFF));
-        GotoType.setFont(new Font("Arial", Font.BOLD, 10));
+        GotoType.setFont(new Font("Arial", Font.BOLD, 20));
         GotoType.addActionListener(this);
+        tempBut = new JButton();
+        tempBut.setBounds(1600, 800, 0, 1);
+        tempBut.setBackground(GlobalFrame.background);
+        tempBut.setBorder(null);
+        tempBut.setEnabled(false);
         Logic.add(GotoType);
+        Logic.add(tempBut);
 
     }
 
@@ -97,6 +107,7 @@ public class GridMatrix implements ActionListener {
                 }
             }
             GotoType.setVisible(false);
+            tempBut.setVisible(false);
             System.out.println(Arrays.toString(results));
             System.out.println(Arrays.deepToString(cofficients));
             new wayToSolve(Logic, cofficients, results);

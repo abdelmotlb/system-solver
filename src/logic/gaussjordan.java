@@ -1,11 +1,35 @@
 package logic;
 
+import GUI.GlobalFrame;
+
 public class gaussjordan {
     private boolean valid = true;
     private double[][] arr2;
     private int n;
     private double[] b2;
     private long time;
+    private int pres = GlobalFrame.precision;
+
+    private double approx(double num, int pr) {
+        int temp = pr;
+        // for leading zeros
+        if ((int) num == 0) {
+            while (num * Math.pow(10, temp) < Math.pow(10, pr - 1))
+                temp++;
+            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
+            // length of whole number > number of presction
+        } else if ((int) num > Math.pow(10, pr) - 1) {
+            temp = 1;
+            while (num / Math.pow(10, temp) > Math.pow(10, pr - 1)) {
+                temp++;
+            }
+            return (Math.round(num / Math.pow(10, temp - 1))) * Math.pow(10, temp - 1);
+            // not long not leading zeros
+        } else {
+            temp = pr - ((int) Math.log10(num) + 1);
+            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
+        }
+    }
 
     private int scaling(int row) {
         double[] temp = new double[n - row];
@@ -15,19 +39,22 @@ public class gaussjordan {
             if (mymax <= 0)
                 mymax *= -1;
 
-            for (int j = row + 1; j < n; j++) {
-                double toComp = arr2[i][j];
-                if (toComp < 0) {
-                    toComp *= -1;
+            if (GlobalFrame.useScaling) {
+                for (int j = row + 1; j < n; j++) {
+                    double toComp = arr2[i][j];
+                    if (toComp < 0) {
+                        toComp *= -1;
+                    }
+                    if (toComp > mymax) {
+                        mymax = toComp;
+                    }
                 }
-                if (toComp > mymax) {
-                    mymax = toComp;
+                if (mymax == 0) {
+                    valid = false;
+                    break;
                 }
             }
-            if (mymax == 0) {
-                valid = false;
-                return -1;
-            }
+
             temp[i - row] = arr2[i][row] / mymax;
             if (temp[i - row] < 0)
                 temp[i - row] *= -1;
@@ -69,20 +96,20 @@ public class gaussjordan {
                 return;
             }
             for (int l = k; l < n; l++) {
-                arr2[k][l] /= factor1;
+                arr2[k][l] = approx(arr2[k][l] / factor1, pres);
             }
-            b2[k] /= factor1;
+            b2[k] = approx(b2[k] / factor1, pres);
             for (int i = k + 1; i < n; i++) {
                 double factor = arr2[i][k];
                 for (int j = k + 1; j < n; j++)
-                    arr2[i][j] = arr2[i][j] - factor * arr2[k][j];
-                b2[i] = b2[i] - factor * b2[k];
+                    arr2[i][j] = approx(arr2[i][j] - factor * arr2[k][j], pres);
+                b2[i] = approx(b2[i] - factor * b2[k], pres);
             }
             for (int i = k - 1; i >= 0; i--) {
                 double factor = arr2[i][k];
                 for (int j = k + 1; j < n; j++)
-                    arr2[i][j] = arr2[i][j] - factor * arr2[k][j];
-                b2[i] = b2[i] - factor * b2[k];
+                    arr2[i][j] = approx(arr2[i][j] - factor * arr2[k][j], pres);
+                b2[i] = approx(b2[i] - factor * b2[k], pres);
             }
         }
     }
@@ -108,9 +135,9 @@ public class gaussjordan {
         b2 = new double[n];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                arr2[i][j] = arr[i][j];
+                arr2[i][j] = approx(arr[i][j], pres);
             }
-            b2[i] = b[i];
+            b2[i] = approx(b[i], pres);
         }
     }
 

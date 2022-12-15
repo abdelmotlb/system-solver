@@ -1,5 +1,7 @@
 package logic;
 
+import GUI.GlobalFrame;
+
 public class GaussSeidel {
     // get by constructor
     int n;
@@ -22,6 +24,27 @@ public class GaussSeidel {
 
     public long getTime() {
         return time;
+    }
+
+    private double approx(double num, int pr) {
+        int temp = pr;
+        // for leading zeros
+        if ((int) num == 0) {
+            while (num * Math.pow(10, temp) < Math.pow(10, pr - 1))
+                temp++;
+            return approx(Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp), GlobalFrame.precision);
+            // length of whole number > number of presction
+        } else if ((int) num > Math.pow(10, pr) - 1) {
+            temp = 1;
+            while (num / Math.pow(10, temp) > Math.pow(10, pr - 1)) {
+                temp++;
+            }
+            return approx((Math.round(num / Math.pow(10, temp - 1))) * Math.pow(10, temp - 1), GlobalFrame.precision);
+            // not long not leading zeros
+        } else {
+            temp = pr - ((int) Math.log10(num) + 1);
+            return approx(Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp), GlobalFrame.precision);
+        }
     }
 
     public GaussSeidel(double[][] a, double[] b, double[] x, double e, boolean error) {
@@ -51,24 +74,24 @@ public class GaussSeidel {
                     double sum = b[i]; // b_n
                     for (int j = 0; j < n; j++)
                         if (j != i)
-                            sum -= a[i][j] * x[j];
+                            sum = approx(sum - a[i][j] * x[j], GlobalFrame.precision);
 
                     // checking division by zero
-                    System.out.println("matrix :" + a[i][i]);
+                    // System.out.println("matrix :" + a[i][i]);
                     if (a[i][i] == 0)
                         throw new Exception();
 
                     // Update xi to use in the next
                     // row calculation
-                    x[i] = 1 / a[i][i] * sum;
+                    x[i] = approx(1 / a[i][i] * sum, GlobalFrame.precision);
                 }
 
                 // check ending iterations.
                 if (!error) {
                     max_err = 0;
                     for (int i = 0; i < n; i++) {
-                        rel_error[i] = Math.abs(temp[i] - x[i]) / Math.abs(x[i]);
-                        System.out.println(x[i]);
+                        rel_error[i] = approx(Math.abs(temp[i] - x[i]) / Math.abs(x[i]), GlobalFrame.precision);
+                        // System.out.println(x[i]);
                         if (max_err < rel_error[i]) {
                             max_err = rel_error[i];
                         }

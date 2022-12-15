@@ -1,5 +1,7 @@
 package logic;
 
+import GUI.GlobalFrame;
+
 public class crout {
     private double[][] arr2;
     private int n;
@@ -8,6 +10,28 @@ public class crout {
     private double[] ans;
     private boolean valid = true;
     private long time;
+    private int pres = GlobalFrame.precision;
+
+    private double approx(double num, int pr) {
+        int temp = pr;
+        // for leading zeros
+        if ((int) num == 0) {
+            while (num * Math.pow(10, temp) < Math.pow(10, pr - 1))
+                temp++;
+            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
+            // length of whole number > number of presction
+        } else if ((int) num > Math.pow(10, pr) - 1) {
+            temp = 1;
+            while (num / Math.pow(10, temp) > Math.pow(10, pr - 1)) {
+                temp++;
+            }
+            return (Math.round(num / Math.pow(10, temp - 1))) * Math.pow(10, temp - 1);
+            // not long not leading zeros
+        } else {
+            temp = pr - ((int) Math.log10(num) + 1);
+            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
+        }
+    }
 
     private int scaling(int row) {
         double[] temp = new double[n - row];
@@ -17,19 +41,22 @@ public class crout {
             if (mymax <= 0)
                 mymax *= -1;
 
-            for (int j = row + 1; j < n; j++) {
-                double toComp = arr2[i][j];
-                if (toComp < 0) {
-                    toComp *= -1;
+            if (GlobalFrame.useScaling) {
+                for (int j = row + 1; j < n; j++) {
+                    double toComp = arr2[i][j];
+                    if (toComp < 0) {
+                        toComp *= -1;
+                    }
+                    if (toComp > mymax) {
+                        mymax = toComp;
+                    }
                 }
-                if (toComp > mymax) {
-                    mymax = toComp;
+                if (mymax == 0) {
+                    valid = false;
+                    break;
                 }
             }
-            if (mymax == 0) {
-                valid = false;
-                break;
-            }
+
             temp[i - row] = arr2[i][row] / mymax;
             if (temp[i - row] < 0)
                 temp[i - row] *= -1;
@@ -59,13 +86,13 @@ public class crout {
 
     private void backSubstitution() {
         int n = arr2.length;
-        ans[n - 1] = y[n - 1];
+        ans[n - 1] = approx(y[n - 1], pres);
         for (int i = n - 2; i >= 0; i--) {
             double sum = 0;
             for (int j = i + 1; j < n; j++) {
-                sum = sum + arr2[i][j] * ans[j];
+                sum = approx(sum + arr2[i][j] * ans[j], pres);
             }
-            ans[i] = (y[i] - sum);
+            ans[i] = approx(y[i] - sum, pres);
         }
     }
 
@@ -74,7 +101,7 @@ public class crout {
             valid = false;
             return;
         }
-        y[0] = b2[0] / arr2[0][0];
+        y[0] = approx(b2[0] / arr2[0][0], pres);
         for (int i = 1; i < n; i++) {
             double sum = 0;
             for (int j = 0; j < i; j++) {
@@ -82,13 +109,13 @@ public class crout {
                     valid = false;
                     return;
                 }
-                sum += (y[j] * arr2[i][j]);
+                sum = approx(sum + (y[j] * arr2[i][j]), pres);
             }
             if (arr2[i][i] == 0) {
                 valid = false;
                 return;
             }
-            y[i] = (b2[i] - sum) / arr2[i][i];
+            y[i] = approx((b2[i] - sum) / arr2[i][i], pres);
         }
     }
 
@@ -100,10 +127,10 @@ public class crout {
                     valid = false;
                     return;
                 }
-                double factor = arr2[k][i] / arr2[k][k];
+                double factor = approx(arr2[k][i] / arr2[k][k], pres);
                 arr2[k][i] = factor;
                 for (int j = k + 1; j < n; j++)
-                    arr2[j][i] = arr2[j][i] - factor * arr2[j][k];
+                    arr2[j][i] = approx(arr2[j][i] - factor * arr2[j][k], pres);
             }
         }
     }
@@ -129,9 +156,9 @@ public class crout {
         // copy equations to keep original
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                arr2[i][j] = arr[i][j];
+                arr2[i][j] = approx(arr[i][j], pres);
             }
-            b2[i] = b[i];
+            b2[i] = approx(b[i], pres);
         }
     }
 

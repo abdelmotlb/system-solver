@@ -1,11 +1,35 @@
 package logic;
 
+import GUI.GlobalFrame;
+
 public class gauss {
     private boolean valid = true;
     private double[][] arr2;
     private int n;
     private double[] b2;
     private long time;
+    private int pres = GlobalFrame.precision;
+
+    private double approx(double num, int pr) {
+        int temp = pr;
+        // for leading zeros
+        if ((int) num == 0) {
+            while (num * Math.pow(10, temp) < Math.pow(10, pr - 1))
+                temp++;
+            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
+            // length of whole number > number of presction
+        } else if ((int) num > Math.pow(10, pr) - 1) {
+            temp = 1;
+            while (num / Math.pow(10, temp) > Math.pow(10, pr - 1)) {
+                temp++;
+            }
+            return (Math.round(num / Math.pow(10, temp - 1))) * Math.pow(10, temp - 1);
+            // not long not leading zeros
+        } else {
+            temp = pr - ((int) Math.log10(num) + 1);
+            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
+        }
+    }
 
     private int scaling(int row) {
         double[] temp = new double[n - row];
@@ -15,19 +39,22 @@ public class gauss {
             if (mymax <= 0)
                 mymax *= -1;
 
-            for (int j = row + 1; j < n; j++) {
-                double toComp = arr2[i][j];
-                if (toComp < 0) {
-                    toComp *= -1;
+            if (GlobalFrame.useScaling) {
+                for (int j = row + 1; j < n; j++) {
+                    double toComp = arr2[i][j];
+                    if (toComp < 0) {
+                        toComp *= -1;
+                    }
+                    if (toComp > mymax) {
+                        mymax = toComp;
+                    }
                 }
-                if (toComp > mymax) {
-                    mymax = toComp;
+                if (mymax == 0) {
+                    valid = false;
+                    break;
                 }
             }
-            if (mymax == 0) {
-                valid = false;
-                return -1;
-            }
+
             temp[i - row] = arr2[i][row] / mymax;
             if (temp[i - row] < 0)
                 temp[i - row] *= -1;
@@ -68,10 +95,10 @@ public class gauss {
                     valid = false;
                     return;
                 }
-                double factor = arr2[i][k] / arr2[k][k];
+                double factor = approx(arr2[i][k] / arr2[k][k], pres);
                 for (int j = k + 1; j < n; j++)
-                    arr2[i][j] = arr2[i][j] - factor * arr2[k][j];
-                b2[i] = b2[i] - factor * b2[k];
+                    arr2[i][j] = approx(arr2[i][j] - factor * arr2[k][j], pres);
+                b2[i] = approx(b2[i] - factor * b2[k], pres);
             }
         }
     }
@@ -83,17 +110,17 @@ public class gauss {
             valid = false;
             return;
         }
-        ans[n - 1] = b2[n - 1] / arr2[n - 1][n - 1];
+        ans[n - 1] = approx(b2[n - 1] / arr2[n - 1][n - 1], pres);
         for (int i = n - 2; i >= 0; i--) {
             double sum = 0;
             for (int j = i + 1; j < n; j++) {
-                sum = sum + arr2[i][j] * ans[j];
+                sum = approx(sum + arr2[i][j] * ans[j], pres);
             }
             if (arr2[i][i] == 0) {
                 valid = false;
                 return;
             }
-            ans[i] = (b2[i] - sum) / arr2[i][i];
+            ans[i] = approx((b2[i] - sum) / arr2[i][i], pres);
         }
     }
 
@@ -123,9 +150,9 @@ public class gauss {
         // copy equations to keep original
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                arr2[i][j] = arr[i][j];
+                arr2[i][j] = approx(arr[i][j], pres);
             }
-            b2[i] = b[i];
+            b2[i] = approx(b[i], pres);
         }
     }
 
