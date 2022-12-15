@@ -22,7 +22,7 @@ public class DownLittle {
             for (int j = row + 1; j < n; j++) {
                 double toComp = arr2[i][j];
                 if (toComp < 0) {
-                    toComp= -1;
+                    toComp = -1;
                 }
                 if (toComp > mymax) {
                     mymax = toComp;
@@ -98,8 +98,9 @@ public class DownLittle {
     private void forElimination() {
         int n = arr2.length;
         for (int k = 0; k < n - 1 && valid; k++) {
+            pivoting(k);
             for (int i = k + 1; i < n; i++) {
-                pivoting(i);
+
                 if (arr2[k][k] == 0) {
                     valid = false;
                     return;
