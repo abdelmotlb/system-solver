@@ -10,49 +10,25 @@ public class gaussjordan {
     private long time;
     private int pres = GlobalFrame.precision;
 
-    private double approx(double num, int pr) {
-        int temp = pr;
-        // for leading zeros
-        if ((int) num == 0) {
-            while (num * Math.pow(10, temp) < Math.pow(10, pr - 1))
-                temp++;
-            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
-            // length of whole number > number of presction
-        } else if ((int) num > Math.pow(10, pr) - 1) {
-            temp = 1;
-            while (num / Math.pow(10, temp) > Math.pow(10, pr - 1)) {
-                temp++;
-            }
-            return (Math.round(num / Math.pow(10, temp - 1))) * Math.pow(10, temp - 1);
-            // not long not leading zeros
-        } else {
-            temp = pr - ((int) Math.log10(num) + 1);
-            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
-        }
-    }
-
     private int scaling(int row) {
         double[] temp = new double[n - row];
         int maxIndex = row;
         for (int i = row; i < n; i++) {
             double mymax = arr2[i][row];
             if (mymax <= 0)
-                mymax *= -1;
-
-            if (GlobalFrame.useScaling) {
-                for (int j = row + 1; j < n; j++) {
-                    double toComp = arr2[i][j];
-                    if (toComp < 0) {
-                        toComp *= -1;
-                    }
-                    if (toComp > mymax) {
-                        mymax = toComp;
-                    }
+                mymax = -1;
+            for (int j = row + 1; j < n; j++) {
+                double toComp = arr2[i][j];
+                if (toComp < 0) {
+                    toComp= -1;
                 }
-                if (mymax == 0) {
-                    valid = false;
-                    break;
+                if (toComp > mymax) {
+                    mymax = toComp;
                 }
+            }
+            if (mymax == 0) {
+                valid = false;
+                break;
             }
 
             temp[i - row] = arr2[i][row] / mymax;
@@ -67,7 +43,19 @@ public class gaussjordan {
     }
 
     private void pivoting(int row) {
-        int maxIndex = scaling(row);
+        int maxIndex;
+        if (GlobalFrame.useScaling)
+            maxIndex = scaling(row);
+        else {
+            maxIndex = row;
+            double maxn = Math.abs(arr2[row][row]);
+            for (int i = row + 1; i < n; i++) {
+                if (Math.abs(arr2[i][row]) > maxn) {
+                    maxn = arr2[i][row];
+                    maxIndex = i;
+                }
+            }
+        }
         if (maxIndex >= 0) {
             if (arr2[row][maxIndex] != 0) {
                 if (maxIndex != row) {
@@ -83,7 +71,6 @@ public class gaussjordan {
                 valid = false;
         } else
             valid = false;
-
     }
 
     private void forElimination() {
@@ -96,20 +83,20 @@ public class gaussjordan {
                 return;
             }
             for (int l = k; l < n; l++) {
-                arr2[k][l] = approx(arr2[k][l] / factor1, pres);
+                arr2[k][l] = approximation.sigFig(arr2[k][l] / factor1, pres);
             }
-            b2[k] = approx(b2[k] / factor1, pres);
+            b2[k] = approximation.sigFig(b2[k] / factor1, pres);
             for (int i = k + 1; i < n; i++) {
                 double factor = arr2[i][k];
                 for (int j = k + 1; j < n; j++)
-                    arr2[i][j] = approx(arr2[i][j] - factor * arr2[k][j], pres);
-                b2[i] = approx(b2[i] - factor * b2[k], pres);
+                    arr2[i][j] = approximation.sigFig(arr2[i][j] - factor * arr2[k][j], pres);
+                b2[i] = approximation.sigFig(b2[i] - factor * b2[k], pres);
             }
             for (int i = k - 1; i >= 0; i--) {
                 double factor = arr2[i][k];
                 for (int j = k + 1; j < n; j++)
-                    arr2[i][j] = approx(arr2[i][j] - factor * arr2[k][j], pres);
-                b2[i] = approx(b2[i] - factor * b2[k], pres);
+                    arr2[i][j] = approximation.sigFig(arr2[i][j] - factor * arr2[k][j], pres);
+                b2[i] = approximation.sigFig(b2[i] - factor * b2[k], pres);
             }
         }
     }
@@ -135,9 +122,9 @@ public class gaussjordan {
         b2 = new double[n];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                arr2[i][j] = approx(arr[i][j], pres);
+                arr2[i][j] = approximation.sigFig(arr[i][j], pres);
             }
-            b2[i] = approx(b[i], pres);
+            b2[i] = approximation.sigFig(b[i], pres);
         }
     }
 

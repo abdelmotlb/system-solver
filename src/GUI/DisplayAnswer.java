@@ -7,11 +7,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class DisplayAnswer implements ActionListener {
-    private MyButton goToNewProblem;
+
     private double[] SolutionArr;
     private JPanel Logic;
-    MyButton timeConsumed;
-    JButton tempBut;
+
+    // used references
+    private JLabel SolutionDomain;
+    private MyButton[] solutionValues;
+    private JLabel labTimeConsumed;
+    private MyButton timeConsumed;
+    private MyButton goToNewProblem;
+    private MyButton diffTypeBut;
+    private JButton tempBut;
 
     public DisplayAnswer(JPanel Logic, double[] SolutionArr){
         this.Logic = Logic;
@@ -28,47 +35,64 @@ public class DisplayAnswer implements ActionListener {
         // edit border
         Logic.setBorder(new EmptyBorder(100 * ( NumOfEquations +1) , 2 * 60 * ( NumOfEquations +1) ,0, 0));
 
-
-
-        // label above values
-        JLabel SolutionDomain = new JLabel("↓ Solution Domain ↓");
-        SolutionDomain.setBounds(20, 20, 400, 60); ////
-        SolutionDomain.setVerticalAlignment(JLabel.CENTER);
-        SolutionDomain.setForeground(Color.white);
-        SolutionDomain.setFont( new Font("Times New Roman", Font.PLAIN, 40) );
-        Logic.add(SolutionDomain);
-
-        MyButton[] solutionValues = new MyButton[ NumOfEquations ];
-        for(int i = 0 ; i < NumOfEquations ; i++){
-            solutionValues[i] = new MyButton( String.format("x%d = %f", i+1, SolutionArr[i]) );
-            solutionValues[i].setBounds(100 * (i+1) - 50, startY + 60 * (i+1) - 50, 300, 50);
-            solutionValues[i].setEnabled(false);
-            displayAnswerColor(solutionValues[i], 30);
+        {
+            // label above values
+            SolutionDomain = new JLabel("↓ Solution Domain ↓");
+            SolutionDomain.setBounds(20, 20, 400, 60); ////
+            SolutionDomain.setVerticalAlignment(JLabel.CENTER);
+            SolutionDomain.setForeground(Color.white);
+            SolutionDomain.setFont( new Font("Times New Roman", Font.PLAIN, 40) );
+            Logic.add(SolutionDomain);
         }
 
-        JLabel labTimeConsumed = new JLabel("↓ time complexity ↓");
-        labTimeConsumed.setBounds(20, 500, 400, 60); ////
-        labTimeConsumed.setVerticalAlignment(JLabel.CENTER);
-        labTimeConsumed.setForeground(Color.white);
-        labTimeConsumed.setFont( new Font("Times New Roman", Font.PLAIN, 40) );
-        Logic.add(labTimeConsumed);
+        {
+            solutionValues = new MyButton[ NumOfEquations ];
+            for(int i = 0 ; i < NumOfEquations ; i++){
+                solutionValues[i] = new MyButton( String.format("x%d = %f", i+1, SolutionArr[i]) );
+                solutionValues[i].setBounds(100 * (i+1) - 50, startY + 60 * (i+1) - 50, 300, 50);
+                solutionValues[i].setEnabled(false);
+                displayAnswerColor(solutionValues[i], 30);
+            }
+        }
 
-        timeConsumed = new MyButton( String.format("%f in ms", wayToSolve.gotTime / 1e6) );
-        timeConsumed.setBounds(20, 600, 300, 50);
-        timeConsumed.setEnabled(false);
-        displayAnswerColor(timeConsumed, 30);
+        {
+            labTimeConsumed = new JLabel("↓ time complexity ↓");
+            labTimeConsumed.setBounds(20, 500, 400, 60); ////
+            labTimeConsumed.setVerticalAlignment(JLabel.CENTER);
+            labTimeConsumed.setForeground(Color.white);
+            labTimeConsumed.setFont( new Font("Times New Roman", Font.PLAIN, 40) );
+            Logic.add(labTimeConsumed);
+        }
 
-        goToNewProblem = new MyButton("solve New problem!");
-        goToNewProblem.setBounds(950, 250, 400, 80);
-        displayAnswerColor(goToNewProblem, 60);
-        goToNewProblem.setColor(GlobalFrame.secUsedColor);
-        goToNewProblem.setColorOver(GlobalFrame.background);
-        goToNewProblem.addActionListener(this);
-        Logic.add(goToNewProblem);
+        {
+            timeConsumed = new MyButton( String.format("%f in ms", wayToSolve.gotTime / 1e6) );
+            timeConsumed.setBounds(20, 600, 300, 50);
+            timeConsumed.setEnabled(false);
+            displayAnswerColor(timeConsumed, 30);
+        }
+
+        {
+            goToNewProblem = new MyButton("solve New problem!");
+            goToNewProblem.setBounds(950, 250, 400, 80);
+            displayAnswerColor(goToNewProblem, 60);
+            goToNewProblem.setColor(GlobalFrame.secUsedColor);
+            goToNewProblem.setColorOver(GlobalFrame.background);
+            goToNewProblem.addActionListener(this);
+            Logic.add(goToNewProblem);
+        }
+
+        {
+            // different type
+            diffTypeBut = new MyButton("solve by different method!");
+            diffTypeBut.setBounds(950, 350, 400, 80);
+            displayAnswerColor(diffTypeBut, 60);
+            diffTypeBut.setColor(GlobalFrame.secUsedColor);
+            diffTypeBut.setColorOver(GlobalFrame.background);
+            diffTypeBut.addActionListener(this);
+            Logic.add(diffTypeBut);
+        }
 
         editButtonsDisplay();
-
-        System.out.println("in arrRepresentatioin");
     }
 
     public void displayAnswerColor(MyButton but, int size){
@@ -95,7 +119,19 @@ public class DisplayAnswer implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new GlobalFrame();
+        if( e.getSource() == goToNewProblem ){
+            new GlobalFrame();
+        }else if( e.getSource() == diffTypeBut ){
+            SolutionDomain.setVisible(false);
+            for(MyButton but : solutionValues){ but.setVisible(false); }
+            labTimeConsumed.setVisible(false);
+            timeConsumed.setVisible(false);
+            goToNewProblem.setVisible(false);
+            diffTypeBut.setVisible(false);
+            tempBut.setVisible(false);
+
+            new wayToSolve(Logic, wayToSolve.cofficients, wayToSolve.results);
+        }
     }
 }
 

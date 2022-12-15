@@ -14,15 +14,19 @@ public class GridMatrix implements ActionListener {
     private JPanel Logic;
     private JLabel[][] variablesName;
     private JTextField[][] pocket;
-    private double cofficients[][];
+    private double cofficients[][] ;
     private double results[];
     private JButton GotoType;
     private int NumofEquations;
     JButton tempBut;
+    private double tempcoff[][];
+    private double tempres[];
 
     GridMatrix(JPanel Logic, int NumofEquations) {
         this.Logic = Logic;
         this.NumofEquations = NumofEquations;
+        tempcoff = new double[][]{{1, -3 , 2, 1}, {2, -6, 1, 4}, {-1, 2, 3, 4}, {0, -1, 1, 1}};
+        tempres = new double[]{-4, 1, 12, 0};
         EquationsLayout();
     }
 
@@ -93,14 +97,14 @@ public class GridMatrix implements ActionListener {
                     if (j != NumofEquations) {
 
                         try { cofficients[i][j] = parseDouble(pocket[i][j].getText()); }
-                        catch(NumberFormatException ea) { cofficients[i][j] = 0; }
+                        catch(NumberFormatException ea) { cofficients[i][j] = tempcoff[i][j]; } // cofficients[i][j] = 0;
                         variablesName[i][j].setVisible(false);
                         pocket[i][j].setVisible(false);
 
                     } else {
 
                         try { results[i] = parseDouble(pocket[i][j].getText()); }
-                        catch(NumberFormatException ea) { results[i] = 0; }
+                        catch(NumberFormatException ea) { results[i] = tempres[i]; } // results[i] = 0;
                         pocket[i][j].setVisible(false);
 
                     }

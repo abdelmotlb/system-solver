@@ -12,49 +12,25 @@ public class DownLittle {
     private long time;
     private int pres = GlobalFrame.precision;
 
-    private double approx(double num, int pr) {
-        int temp = pr;
-        // for leading zeros
-        if ((int) num == 0) {
-            while (num * Math.pow(10, temp) < Math.pow(10, pr - 1))
-                temp++;
-            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
-            // length of whole number > number of presction
-        } else if ((int) num > Math.pow(10, pr) - 1) {
-            temp = 1;
-            while (num / Math.pow(10, temp) > Math.pow(10, pr - 1)) {
-                temp++;
-            }
-            return (Math.round(num / Math.pow(10, temp - 1))) * Math.pow(10, temp - 1);
-            // not long not leading zeros
-        } else {
-            temp = pr - ((int) Math.log10(num) + 1);
-            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
-        }
-    }
-
     private int scaling(int row) {
         double[] temp = new double[n - row];
         int maxIndex = row;
         for (int i = row; i < n; i++) {
             double mymax = arr2[i][row];
             if (mymax <= 0)
-                mymax *= -1;
-
-            if (GlobalFrame.useScaling) {
-                for (int j = row + 1; j < n; j++) {
-                    double toComp = arr2[i][j];
-                    if (toComp < 0) {
-                        toComp *= -1;
-                    }
-                    if (toComp > mymax) {
-                        mymax = toComp;
-                    }
+                mymax = -1;
+            for (int j = row + 1; j < n; j++) {
+                double toComp = arr2[i][j];
+                if (toComp < 0) {
+                    toComp= -1;
                 }
-                if (mymax == 0) {
-                    valid = false;
-                    break;
+                if (toComp > mymax) {
+                    mymax = toComp;
                 }
+            }
+            if (mymax == 0) {
+                valid = false;
+                break;
             }
 
             temp[i - row] = arr2[i][row] / mymax;
@@ -69,7 +45,19 @@ public class DownLittle {
     }
 
     private void pivoting(int row) {
-        int maxIndex = scaling(row);
+        int maxIndex;
+        if (GlobalFrame.useScaling)
+            maxIndex = scaling(row);
+        else {
+            maxIndex = row;
+            double maxn = Math.abs(arr2[row][row]);
+            for (int i = row + 1; i < n; i++) {
+                if (Math.abs(arr2[i][row]) > maxn) {
+                    maxn = arr2[i][row];
+                    maxIndex = i;
+                }
+            }
+        }
         if (maxIndex >= 0) {
             if (arr2[row][maxIndex] != 0) {
                 if (maxIndex != row) {
@@ -93,17 +81,17 @@ public class DownLittle {
             valid = false;
             return;
         }
-        ans[n - 1] = approx(y[n - 1] / arr2[n - 1][n - 1], pres);
+        ans[n - 1] = approximation.sigFig(y[n - 1] / arr2[n - 1][n - 1], pres);
         for (int i = n - 2; i >= 0; i--) {
             double sum = 0;
             for (int j = i + 1; j < n; j++) {
-                sum = approx(sum + arr2[i][j] * ans[j], pres);
+                sum = approximation.sigFig(sum + arr2[i][j] * ans[j], pres);
             }
             if (arr2[i][i] == 0) {
                 valid = false;
                 return;
             }
-            ans[i] = approx((y[i] - sum) / arr2[i][i], pres);
+            ans[i] = approximation.sigFig((y[i] - sum) / arr2[i][i], pres);
         }
     }
 
@@ -116,10 +104,10 @@ public class DownLittle {
                     valid = false;
                     return;
                 }
-                double factor = approx(arr2[i][k] / arr2[k][k], pres);
+                double factor = approximation.sigFig(arr2[i][k] / arr2[k][k], pres);
                 arr2[i][k] = factor;
                 for (int j = k + 1; j < n; j++)
-                    arr2[i][j] = approx(arr2[i][j] - factor * arr2[k][j], pres);
+                    arr2[i][j] = approximation.sigFig(arr2[i][j] - factor * arr2[k][j], pres);
             }
         }
     }
@@ -129,9 +117,9 @@ public class DownLittle {
         for (int i = 1; i < n; i++) {
             double sum = 0;
             for (int j = 0; j < i; j++) {
-                sum = approx(sum + (y[j] * arr2[i][j]), pres);
+                sum = approximation.sigFig(sum + (y[j] * arr2[i][j]), pres);
             }
-            y[i] = approx(b2[i] - sum, pres);
+            y[i] = approximation.sigFig(b2[i] - sum, pres);
         }
     }
 
@@ -153,9 +141,9 @@ public class DownLittle {
         // copy equations to keep original
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                arr2[i][j] = approx(arr[i][j], pres);
+                arr2[i][j] = approximation.sigFig(arr[i][j], pres);
             }
-            b2[i] = approx(b[i], pres);
+            b2[i] = approximation.sigFig(b[i], pres);
         }
     }
 

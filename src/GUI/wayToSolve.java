@@ -28,8 +28,7 @@ public class wayToSolve implements ActionListener {
     private MyButton Downlittle;
     private MyButton Crout;
     private MyButton Cholesky;
-    private double cofficients[][];
-    private double results[];
+
     private JPanel Logic;
 
     // iterative methods requirements
@@ -43,6 +42,11 @@ public class wayToSolve implements ActionListener {
     private boolean BooleanRE_NI;
     private double[] initialGuessArr;
     private double NOI_RE;
+
+    // desired variables
+
+    public static double cofficients[][];
+    public static double results[];
 
 
     public wayToSolve(JPanel Logic, double cofficients[][], double results[]){

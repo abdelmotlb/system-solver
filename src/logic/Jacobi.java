@@ -16,27 +16,6 @@ public class Jacobi {
         return time;
     }
 
-    private double approx(double num, int pr) {
-        int temp = pr;
-        // for leading zeros
-        if ((int) num == 0) {
-            while (num * Math.pow(10, temp) < Math.pow(10, pr - 1))
-                temp++;
-            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
-            // length of whole number > number of presction
-        } else if ((int) num > Math.pow(10, pr) - 1) {
-            temp = 1;
-            while (num / Math.pow(10, temp) > Math.pow(10, pr - 1)) {
-                temp++;
-            }
-            return (Math.round(num / Math.pow(10, temp - 1))) * Math.pow(10, temp - 1);
-            // not long not leading zeros
-        } else {
-            temp = pr - ((int) Math.log10(num) + 1);
-            return Math.round(num * Math.pow(10, temp)) / Math.pow(10.0, temp);
-        }
-    }
-
     private void CopyArrays(double[] Old, double[] New) {
         for (int i = 0; i < New.length; i++)
             Old[i] = New[i];
@@ -78,14 +57,14 @@ public class Jacobi {
                         for (int j = 0; j < n; j++) {
                             if (j == i)
                                 continue;
-                            sum = approx(sum + (cofficient[i][j] * Old[j]), GlobalFrame.precision);
+                            sum = approximation.sigFig(sum + (cofficient[i][j] * Old[j]), GlobalFrame.precision);
                         }
 
                         // checking division by zero
                         if (cofficient[i][i] == 0)
                             throw new Exception();
 
-                        New[i] = approx((B[i] - sum) / cofficient[i][i], GlobalFrame.precision);
+                        New[i] = approximation.sigFig((B[i] - sum) / cofficient[i][i], GlobalFrame.precision);
                     }
                     CopyArrays(Old, New);
 
@@ -105,16 +84,16 @@ public class Jacobi {
                         for (int j = 0; j < n; j++) {
                             if (j == i)
                                 continue;
-                            sum = approx(sum + (cofficient[i][j] * Old[j]), GlobalFrame.precision);
+                            sum = approximation.sigFig(sum + (cofficient[i][j] * Old[j]), GlobalFrame.precision);
                         }
                         // checking division by zero
                         if (Math.abs((B[i] - sum) / cofficient[i][i]) < Double.POSITIVE_INFINITY)
                             throw new Exception();
 
-                        New[i] = approx((B[i] - sum) / cofficient[i][i], GlobalFrame.precision);
+                        New[i] = approximation.sigFig((B[i] - sum) / cofficient[i][i], GlobalFrame.precision);
                     }
                     CopyArrays(Old, New);
-                    // make sure of approx relative error
+                    // make sure of approximation.sigFig relative error
                 } while (MaxRelativeError(Old, New) > RelativeError && counter < 100);
                 time = System.nanoTime() - time;
                 return New;
