@@ -52,6 +52,10 @@ public class Newton {
             double[] oneIteration = new double[5];
             double fxi = calculate.getFunctionOutput(fx, xold);
             double dfxi = calculate.getDerivativeOutput(xold);
+            if (dfxi == 0) {
+                valid = false;
+                return;
+            }
             xnew = approximation.sigFig(xold - (fxi / dfxi), pres);
             error = Math.abs(xnew - xold) / xnew * 100;
             oneIteration[0] = approximation.sigFig(xold, pres);
@@ -79,6 +83,11 @@ public class Newton {
             return null;
         }
         getRoot();
+
+        if (!valid) {
+            System.out.println("error in newton");
+            return null;
+        }
 
         // for (int i = 0; i < ans.size(); i++) {
         // for (int j = 0; j < 5; j++)
