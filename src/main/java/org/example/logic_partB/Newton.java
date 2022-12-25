@@ -14,6 +14,7 @@ public class Newton {
     private int nOfItirations;
     private double es;
     private int pres;
+    private boolean errorStop = false;
 
     // array of each step xi, f(xi), fdash(xi), fxi+1, error
     public ArrayList<double[]> ans = new ArrayList<double[]>();
@@ -35,6 +36,7 @@ public class Newton {
         this.fx = fx;
         this.nOfItirations = nOfItirations;
         this.es = es;
+        this.errorStop = true;
         this.pres = pres;
     }
 
@@ -65,7 +67,7 @@ public class Newton {
             oneIteration[4] = error;
             xold = xnew;
             ans.add(oneIteration);
-            if (Math.abs(error) < Math.abs(es))
+            if (errorStop && Math.abs(error) < Math.abs(es))
                 return;
         }
 
