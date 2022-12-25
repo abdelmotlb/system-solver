@@ -17,8 +17,6 @@ public class GlobalFrame extends JFrame {
     public static final Color background = new Color(0x063548);
     public static JPanel Logic;
 
-
-
     // constructor
     public GlobalFrame() {
 
@@ -34,14 +32,14 @@ public class GlobalFrame extends JFrame {
 
     }
 
-    public void createLogo(){
+    public void createLogo() {
         // photo of app
         String IconLoc = "src/GUI/logo.png";
         ImageIcon img = new ImageIcon(IconLoc);
         this.setIconImage(img.getImage());
     }
 
-    public void createPanel(){
+    public void createPanel() {
         // logic part
         Logic = new JPanel();
         Logic.setBounds(0, 100, 1400, 800);
@@ -51,7 +49,7 @@ public class GlobalFrame extends JFrame {
         Logic.setBorder(new EmptyBorder(800, 1400, 0, 0));
     }
 
-    public void updateFrameSettings(){
+    public void updateFrameSettings() {
         // frame settings
         this.setTitle("Matrix solver");
         this.setSize(1400, 800);
@@ -60,7 +58,7 @@ public class GlobalFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void createScroller(){
+    public void createScroller() {
         // scroll initializer
         JScrollPane scroller = new JScrollPane(Logic);
         this.add(BorderLayout.CENTER, scroller);
