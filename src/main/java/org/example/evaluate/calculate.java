@@ -11,12 +11,12 @@ public class calculate {
     public calculate() {
     }
 
-    private static void makeDerivative( String inputEqn ) throws IOException, InterruptedException {
+    public static void makeDerivative(String inputEqn) throws IOException, InterruptedException {
 
         // handle power case
-        for(int i = 0 ;i < inputEqn.length() ;i++){
-            if( inputEqn.charAt(i) == '^' ){
-                inputEqn = inputEqn.substring(0, i) + "**" + inputEqn.substring(i+1, inputEqn.length());
+        for (int i = 0; i < inputEqn.length(); i++) {
+            if (inputEqn.charAt(i) == '^') {
+                inputEqn = inputEqn.substring(0, i) + "**" + inputEqn.substring(i + 1, inputEqn.length());
             }
         }
         // System.out.println( "inputEqn " + inputEqn );
@@ -30,7 +30,7 @@ public class calculate {
         // end write got string in file
 
         // run python....
-        String Script_Path = "D:/university/y2.term1/Numerical/project/phase2 test/tst7/tst7/src/main/java/org/example/evaluate/getDerivative.py";
+        String Script_Path = "./src/main/java/org/example/evaluate/getDerivative.py";
         ProcessBuilder Process_Builder = new ProcessBuilder("py", Script_Path).inheritIO();
         Process Demo_Process = Process_Builder.start();
         Demo_Process.waitFor();
@@ -38,18 +38,20 @@ public class calculate {
         // end run python
     }
 
-    public static double getDerivativeOutput( String inputEqn, double value ){
+    public static double getDerivativeOutput(double value) {
 
         String data = "-1";
         double result = -1;
         File file;
 
         // get derivative function from python
-        try { makeDerivative(inputEqn); }
-        catch ( Exception ea ){}
+        // try {
+        // makeDerivative(inputEqn);
+        // } catch (Exception ea) {
+        // }
         // end derivative function from python
 
-        try{
+        try {
 
             // get data
             file = new File("./derivativeFunction.txt");
@@ -61,10 +63,10 @@ public class calculate {
             // end get data
 
             // replacing
-            data = data.replaceAll( "x", Double.toString(value) );
-            for(int i = 0 ;i < data.length()-1 ;i++){
-                if( data.charAt(i) == '*' && data.charAt(i+1) == '*' ){
-                    data = data.substring(0, i) + '^' + data.substring(i+2, data.length());
+            data = data.replaceAll("x", Double.toString(value));
+            for (int i = 0; i < data.length() - 1; i++) {
+                if (data.charAt(i) == '*' && data.charAt(i + 1) == '*') {
+                    data = data.substring(0, i) + '^' + data.substring(i + 2, data.length());
                 }
             }
             // System.out.println( "data :"+ data );
@@ -77,21 +79,21 @@ public class calculate {
             // System.out.println(result);
             // end evaluate
 
-        }catch (Exception ea){
-            System.out.println( "in get output error" );
+        } catch (Exception ea) {
+            System.out.println("in get output error");
         }
 
         return result;
     }
 
-    public static double getFunctionOutput( String inputEqn, double value ){
+    public static double getFunctionOutput(String inputEqn, double value) {
         double result = -1;
 
         // replacing
-        inputEqn = inputEqn.replaceAll( "x", Double.toString(value) );
-        for(int i = 0 ;i < inputEqn.length()-1 ;i++){
-            if( inputEqn.charAt(i) == '*' && inputEqn.charAt(i+1) == '*' ){
-                inputEqn = inputEqn.substring(0, i) + '^' + inputEqn.substring(i+2, inputEqn.length());
+        inputEqn = inputEqn.replaceAll("x", Double.toString(value));
+        for (int i = 0; i < inputEqn.length() - 1; i++) {
+            if (inputEqn.charAt(i) == '*' && inputEqn.charAt(i + 1) == '*') {
+                inputEqn = inputEqn.substring(0, i) + '^' + inputEqn.substring(i + 2, inputEqn.length());
             }
         }
         // System.out.println( "data :"+ inputEqn );
@@ -106,7 +108,5 @@ public class calculate {
 
         return result;
     }
-
-
 
 }

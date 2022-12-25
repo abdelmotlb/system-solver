@@ -29,7 +29,7 @@ public class Navigator implements ActionListener {
         tempButt();
     }
 
-    public void labelPhoto(){
+    public void labelPhoto() {
         label = new MyButton("choose and go!");
         label.setBounds(600, 50, 300, 150);
         label.setFont(new Font("MV BOLI", Font.ITALIC, 30));
@@ -41,19 +41,19 @@ public class Navigator implements ActionListener {
         Logic.add(label);
     }
 
-    public void rootChoice(){
+    public void rootChoice() {
         rootBut = new MyButton("get equation roots");
         rootBut.setBounds(200, 300, 300, 300);
         ButtonDisplay(rootBut);
     }
 
-    public void SystemOfEqnsChoice(){
+    public void SystemOfEqnsChoice() {
         systemOfEquationsBut = new MyButton("get system solution");
         systemOfEquationsBut.setBounds(1000, 300, 300, 300);
         ButtonDisplay(systemOfEquationsBut);
     }
 
-    private void ButtonDisplay(MyButton but){
+    private void ButtonDisplay(MyButton but) {
         but.setRadius(300);
         but.setForeground(Color.white);
         but.setBackground(GlobalFrame.secUsedColor);
@@ -66,7 +66,7 @@ public class Navigator implements ActionListener {
         Logic.add(but);
     }
 
-    public void tempButt(){
+    public void tempButt() {
         tempBut = new JButton();
         tempBut.setBackground(background);
         tempBut.setEnabled(false);
@@ -81,20 +81,25 @@ public class Navigator implements ActionListener {
         rootBut.setVisible(false);
         systemOfEquationsBut.setVisible(false);
         tempBut.setVisible(false);
-        if(e.getSource() == rootBut){
+        if (e.getSource() == rootBut) {
             // go to display data of roots.
-        }else if(e.getSource() == systemOfEquationsBut){
+        } else if (e.getSource() == systemOfEquationsBut) {
 
             // to call derivative evaluation
-            double gotoutput1 = calculate.getDerivativeOutput("e^(5*x)", 1);
+            try {
+                calculate.makeDerivative("e^(5*x)");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            double gotoutput1 = calculate.getDerivativeOutput(1);
             // to call function evaluation
             double gotoutput2 = calculate.getFunctionOutput("e^(5*x)", 1);
 
             // go to default system values.
             new LinearSystemGlobalData();
             // end go to default system values.
-
-
 
         }
     }
