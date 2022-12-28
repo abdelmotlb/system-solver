@@ -7,20 +7,25 @@ xStringList = lines[0].split()
 yStringList = lines[1].split()
 xlist = []
 ylist = []
-y2list = []
+xlList = []
+xuList = []
+xAxis = []
 
 for x in xStringList:
     xlist.append(float(x))
-    y2list.append(0)
 for y in yStringList:
     ylist.append(float(y))
+for i in range(0, len(xlist)):
+    xAxis.append(0)
+xlList.append(float(lines[2]))
+xlList.append(float(lines[3]))
+xuList.append(float(lines[4]))
+xuList.append(float(lines[5]))
 
-
-# print(count)
-plt.figure(num=0, dpi=120)
-plt.title('Two lines on same graph!')
-# plt.plot(ylist, ylist, label="line 1")
+plt.figure(num=1, dpi=120)
+plt.title("False position method")
 plt.plot(xlist, ylist, color='r')
-plt.plot(xlist, y2list)
+plt.plot(xlList, xuList)
+plt.plot(xlist, xAxis, color='black')
 plt.grid()
 plt.show()
