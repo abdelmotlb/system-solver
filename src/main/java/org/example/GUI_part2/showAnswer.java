@@ -247,8 +247,8 @@ public class showAnswer implements ActionListener {
 
                 plotObj.plotSecant(Function, ans.get(ans.size() - 1)[5], ans.get(ans.size() - 1)[1],
                         ans.get(ans.size() - 1)[2]);
-
             }
+            new showAnswer();
         } else if (e.getSource() == showStepsBut) {
             new steps(ans);
         } else if (e.getSource() == anotherMethodBut) {

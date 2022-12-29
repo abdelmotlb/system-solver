@@ -69,14 +69,14 @@ public class PlotGraph {
 
         // write x values to first line in the file
         System.out.println(xl + " " + xu);
-        for (double i = xl; i <= xu; i += step) {
+        for (double i = Double.min(xl, xu); i <= Double.max(xl, xu); i += Math.abs(step)) {
             writer.print(i);
             writer.print(" ");
         }
 
         // write y values to second line in the file
         writer.print("\n");
-        for (double i = xl; i <= xu; i += step) {
+        for (double i = Double.min(xl, xu); i <= Double.max(xl, xu); i += Math.abs(step)) {
             writer.print(calculate.getFunctionOutput(function, i));
             writer.print(" ");
         }
@@ -89,7 +89,7 @@ public class PlotGraph {
         }
         double drev = calculate.getDerivativeOutput(about);
         double y = calculate.getFunctionOutput(function, about);
-        for (double i = xl; i <= xu; i += step) {
+        for (double i = Double.min(xl, xu); i <= Double.max(xl, xu); i += Math.abs(step)) {
             writer.print(drev * i + (y - drev * about));
             writer.print(" ");
         }
@@ -112,14 +112,14 @@ public class PlotGraph {
 
         // write x values to first line in the file
         System.out.println(xl + " " + xu);
-        for (double i = xl; i <= xu; i += step) {
+        for (double i = Double.min(xl, xu); i <= Double.max(xl, xu); i += Math.abs(step)) {
             writer.print(i);
             writer.print(" ");
         }
 
         // write y values to second line in the file
         writer.print("\n");
-        for (double i = xl; i <= xu; i += step) {
+        for (double i = Double.min(xl, xu); i <= Double.max(xl, xu); i += Math.abs(step)) {
             writer.print(calculate.getFunctionOutput(function, i));
             writer.print(" ");
         }
@@ -150,14 +150,14 @@ public class PlotGraph {
 
         // write x values to first line in the file
         System.out.println(xl + " " + xu);
-        for (double i = xl; i <= xu; i += step) {
+        for (double i = Double.min(xl, xu); i <= Double.max(xl, xu); i += Math.abs(step)) {
             writer.print(i);
             writer.print(" ");
         }
 
         // write y values to second line in the file
         writer.print("\n");
-        for (double i = xl; i <= xu; i += step) {
+        for (double i = Double.min(xl, xu); i <= Double.max(xl, xu); i += Math.abs(step)) {
             writer.print(calculate.getFunctionOutput(function, i));
             writer.print(" ");
         }
@@ -185,14 +185,14 @@ public class PlotGraph {
 
         // write x values to first line in the file
         System.out.println(xl + " " + xu);
-        for (double i = xl; i <= xu; i += step) {
+        for (double i = Double.min(xl, xu); i <= Double.max(xl, xu); i += Math.abs(step)) {
             writer.print(i);
             writer.print(" ");
         }
 
         // write y values to second line in the file
         writer.print("\n");
-        for (double i = xl; i <= xu; i += step) {
+        for (double i = Double.min(xl, xu); i <= Double.max(xl, xu); i += Math.abs(step)) {
             writer.print(calculate.getFunctionOutput(function, i));
             writer.print(" ");
         }
@@ -218,14 +218,14 @@ public class PlotGraph {
 
         // write x values to first line in the file
         System.out.println(xl + " " + xu);
-        for (double i = xl; i <= xu; i += step) {
+        for (double i = Double.min(xl, xu); i <= Double.max(xl, xu); i += Math.abs(step)) {
             writer.print(i);
             writer.print(" ");
         }
 
         // write y values to second line in the file
         writer.print("\n");
-        for (double i = xl; i <= xu; i += step) {
+        for (double i = Double.min(xl, xu); i <= Double.max(xl, xu); i += Math.abs(step)) {
             writer.print(calculate.getFunctionOutput(function, i));
             writer.print(" ");
         }
