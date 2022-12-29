@@ -44,7 +44,7 @@ public class rootsGlobalData implements ActionListener {
         renderMethod();
     }
 
-    public void renderMethod(){
+    public void renderMethod() {
 
         // update border
         Logic.setBorder(new EmptyBorder(750, 1350, 0, 0));
@@ -55,7 +55,7 @@ public class rootsGlobalData implements ActionListener {
             equationLab.setBounds(50, 50, 450, 50);
             equationLab.setFont(new Font("Times New Roman", Font.ITALIC, 35));
             equationLab.setForeground(usedColor);
-            if( wantedMethod == "Fixed Point" )
+            if (wantedMethod == "Fixed Point")
                 equationLab.setText("  → Enter the equation: g(x) = ");
             else
                 equationLab.setText("  → Enter the equation: f(x) = ");
@@ -65,7 +65,7 @@ public class rootsGlobalData implements ActionListener {
         // equation TF
         {
             equationTF = new JTextField();
-            equationTF.setBounds(550, 50, 1300-500, 50);
+            equationTF.setBounds(550, 50, 1300 - 500, 50);
             equationTF.setHorizontalAlignment(JTextField.CENTER);
             equationTF.setFont(new Font("Times New Roman", Font.ITALIC, 50));
         }
@@ -84,7 +84,7 @@ public class rootsGlobalData implements ActionListener {
         // precision TF
         {
             precisionTF = new JTextField();
-            precisionTF.setBounds(550, 150, 1300-500, 50);
+            precisionTF.setBounds(550, 150, 1300 - 500, 50);
             precisionTF.setHorizontalAlignment(JTextField.CENTER);
             precisionTF.setFont(new Font("Times New Roman", Font.ITALIC, 50));
         }
@@ -103,7 +103,7 @@ public class rootsGlobalData implements ActionListener {
         // relative error TF
         {
             relativeErrorTF = new JTextField();
-            relativeErrorTF.setBounds(550, 250, 1300-500, 50);
+            relativeErrorTF.setBounds(550, 250, 1300 - 500, 50);
             relativeErrorTF.setHorizontalAlignment(JTextField.CENTER);
             relativeErrorTF.setFont(new Font("Times New Roman", Font.ITALIC, 50));
         }
@@ -122,7 +122,7 @@ public class rootsGlobalData implements ActionListener {
         // max iterations TF
         {
             maxIterationsTF = new JTextField();
-            maxIterationsTF.setBounds(550, 350, 1300-500, 50);
+            maxIterationsTF.setBounds(550, 350, 1300 - 500, 50);
             maxIterationsTF.setHorizontalAlignment(JTextField.CENTER);
             maxIterationsTF.setFont(new Font("Times New Roman", Font.ITALIC, 50));
         }
@@ -139,22 +139,21 @@ public class rootsGlobalData implements ActionListener {
         // end initial guess label
 
         // initial guess TF
-        if( wantedMethod == "Fixed Point" || wantedMethod == "Newton-Raphson" ){
+        if (wantedMethod == "Fixed Point" || wantedMethod == "Newton-Raphson") {
             initialGuessTF = new JTextField[1];
             initialGuessTF[0] = new JTextField();
-            initialGuessTF[0].setBounds(550, 450, 1300-500, 50);
+            initialGuessTF[0].setBounds(550, 450, 1300 - 500, 50);
             initialGuessTF[0].setHorizontalAlignment(JTextField.CENTER);
             initialGuessTF[0].setFont(new Font("Times New Roman", Font.ITALIC, 35));
-            Logic.add( initialGuessTF[0] );
-        }
-        else {
+            Logic.add(initialGuessTF[0]);
+        } else {
             initialGuessTF = new JTextField[2];
-            for(int i = 0 ; i < 2; i++){
+            for (int i = 0; i < 2; i++) {
                 initialGuessTF[i] = new JTextField();
-                initialGuessTF[i].setBounds(550 + 450*i, 450, 350, 50);
+                initialGuessTF[i].setBounds(550 + 450 * i, 450, 350, 50);
                 initialGuessTF[i].setHorizontalAlignment(JTextField.CENTER);
                 initialGuessTF[i].setFont(new Font("Times New Roman", Font.ITALIC, 35));
-                Logic.add( initialGuessTF[i] );
+                Logic.add(initialGuessTF[i]);
             }
         }
         // end initial guess TF
@@ -165,12 +164,10 @@ public class rootsGlobalData implements ActionListener {
             showSolutionBut.setBounds(600, 700, 300, 50);
             showSolutionBut.setBackground(GlobalFrame.secUsedColor);
             showSolutionBut.setForeground(new Color(0xFFFFFF));
-            showSolutionBut.setFont( new Font("Times New Roman", Font.BOLD, 30) );
+            showSolutionBut.setFont(new Font("Times New Roman", Font.BOLD, 30));
             showSolutionBut.addActionListener(this);
         }
         // end show solution button
-
-
 
         Logic.add(equationLab);
         Logic.add(equationTF);
@@ -182,13 +179,13 @@ public class rootsGlobalData implements ActionListener {
         Logic.add(maxIterationsTF);
         Logic.add(initialGuessLab);
         Logic.add(showSolutionBut);
-        System.out.println( "in render labels" );
+        System.out.println("in render labels");
 
         editButtonsDisplay();
 
     }
 
-    public void editButtonsDisplay(){
+    public void editButtonsDisplay() {
         tempBut = new JButton();
         tempBut.setBounds(1600, 900, 0, 1);
         tempBut.setBackground(GlobalFrame.background);
@@ -209,32 +206,46 @@ public class rootsGlobalData implements ActionListener {
         maxIterationsLab.setVisible(false);
         maxIterationsTF.setVisible(false);
         initialGuessLab.setVisible(false);
-        for(JTextField TF: initialGuessTF){ TF.setVisible(false); }
+        for (JTextField TF : initialGuessTF) {
+            TF.setVisible(false);
+        }
         showSolutionBut.setVisible(false);
 
-        if( e.getSource() == showSolutionBut ){
+        if (e.getSource() == showSolutionBut) {
             // get function
             Function = equationTF.getText();
 
             // get precision
-            try{ Precision = parseInt( precisionTF.getText() ); }
-            catch (Exception ea) { Precision = 10; }
+            try {
+                Precision = parseInt(precisionTF.getText());
+            } catch (Exception ea) {
+                Precision = 10;
+            }
 
             // get relative error
-            try{ relativeError = parseDouble( relativeErrorTF.getText() ); }
-            catch (Exception ea) { relativeError = 10; }
+            try {
+                relativeError = parseDouble(relativeErrorTF.getText());
+            } catch (Exception ea) {
+                relativeError = 0.00001;
+            }
 
             // get max iterations
-            try{ maxIterations = parseInt( maxIterationsTF.getText() ); }
-            catch (Exception ea) { maxIterations = 10; }
+            try {
+                maxIterations = parseInt(maxIterationsTF.getText());
+            } catch (Exception ea) {
+                maxIterations = 50;
+            }
 
             // get first initial guess
             initialGuesses = new double[2];
-            try{ initialGuesses[0] = parseDouble( initialGuessTF[0].getText() ); }
-            catch (Exception ea) { initialGuesses[0] = 1; }
+            try {
+                initialGuesses[0] = parseDouble(initialGuessTF[0].getText());
+            } catch (Exception ea) {
+                initialGuesses[0] = 1;
+            }
 
             // get second initial guess if exists
-            if( wantedMethod != "Fixed Point" && wantedMethod != "Newton-Raphson" ) {
+            if (wantedMethod != "Fixed Point" && wantedMethod != "Newton-Raphson") {
                 try {
                     initialGuesses[1] = parseDouble(initialGuessTF[1].getText());
                 } catch (Exception ea) {

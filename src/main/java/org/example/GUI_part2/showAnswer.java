@@ -31,14 +31,13 @@ public class showAnswer implements ActionListener {
     // edit page
     private JButton tempBut;
 
-    public showAnswer(){
+    public showAnswer() {
 
         rootValidity = true;
         getSolution();
-        if( rootValidity ){
+        if (rootValidity) {
             renderSolution();
-        }
-        else {
+        } else {
             renderException();
         }
 
@@ -55,52 +54,73 @@ public class showAnswer implements ActionListener {
         ExceptionLabel.setOpaque(true);
         Logic.add(ExceptionLabel);
         editButtonsDisplay();
-        System.out.println( " in exception label" );
+        System.out.println(" in exception label");
     }
 
+    public void getSolution() {
+        if (wantedMethod == "Bisection") {
 
-    public void getSolution(){
-        if( wantedMethod == "Bisection" ){
-
-            Bisection bisectionObj = new Bisection(Function, relativeError, maxIterations, initialGuesses[0], initialGuesses[1], Precision);
+            Bisection bisectionObj = new Bisection(Function, relativeError, maxIterations, initialGuesses[0],
+                    initialGuesses[1], Precision);
             ans = bisectionObj.solve();
-            if( bisectionObj.isValidVar() == false ){ rootValidity = false; }
-            outputX = ans.get( ans.size() - 1 )[3];
-            gotTime = bisectionObj.getTime();
+            if (bisectionObj.isValidVar() == false) {
+                rootValidity = false;
+            } else {
+                outputX = ans.get(ans.size() - 1)[3];
+                gotTime = bisectionObj.getTime();
+            }
 
-        } else if( wantedMethod == "False-Position" ){
+        } else if (wantedMethod == "False-Position") {
 
-            falsePosition falsePositionObj = new falsePosition(Function, relativeError, maxIterations, initialGuesses[0], initialGuesses[1], Precision);
+            falsePosition falsePositionObj = new falsePosition(Function, relativeError, maxIterations,
+                    initialGuesses[0], initialGuesses[1], Precision);
             ans = falsePositionObj.solve();
-            if( !falsePositionObj.isValid() ){ rootValidity = false; }
-            outputX = ans.get( ans.size() - 1 )[3];
-            gotTime = falsePositionObj.getTime();
+            if (!falsePositionObj.isValid()) {
+                rootValidity = false;
+            } else {
+                outputX = ans.get(ans.size() - 1)[3];
+                gotTime = falsePositionObj.getTime();
+            }
 
-        } else if( wantedMethod == "Fixed Point" ){
+        } else if (wantedMethod == "Fixed Point") {
 
-            FixedPoint fixedPointObj = new FixedPoint(Function, relativeError, maxIterations, initialGuesses[0], Precision);
+            FixedPoint fixedPointObj = new FixedPoint(Function, relativeError, maxIterations, initialGuesses[0],
+                    Precision);
             ans = fixedPointObj.solve();
-            if( !fixedPointObj.isValid() ){ rootValidity = false; }
-//            System.out.println(Arrays.toString( ans.get( ans.size() - 1 ) ));
-            outputX = ans.get( ans.size() - 1 )[2];
-            gotTime = fixedPointObj.getTime();
+            if (!fixedPointObj.isValid()) {
+                rootValidity = false;
+            }
+            // System.out.println(Arrays.toString( ans.get( ans.size() - 1 ) ));
+            else {
+                outputX = ans.get(ans.size() - 1)[2];
+                gotTime = fixedPointObj.getTime();
+            }
 
-        } else if ( wantedMethod == "Newton-Raphson" ) {
+        } else if (wantedMethod == "Newton-Raphson") {
 
-            Newton newtonObj = new Newton( Function, relativeError, maxIterations, initialGuesses[0],  Precision);
+            Newton newtonObj = new Newton(Function, relativeError, maxIterations, initialGuesses[0], Precision);
             ans = newtonObj.solve();
-            if( !newtonObj.isValid() ){ rootValidity = false; }
-//            System.out.println(Arrays.toString( ans.get( ans.size() - 1 ) ));
-            outputX = ans.get( ans.size() - 1 )[4];
-            // time not got /////////////////////
+            if (!newtonObj.isValid()) {
+                rootValidity = false;
+            }
+            // System.out.println(Arrays.toString( ans.get( ans.size() - 1 ) ));
+            else {
+                outputX = ans.get(ans.size() - 1)[4];
+                gotTime = newtonObj.getTime();
+            }
 
-        } else if ( wantedMethod == "Secant Method" ) {
+        } else if (wantedMethod == "Secant Method") {
 
-            SecantMethod secantObj = new SecantMethod(Function, relativeError, maxIterations, initialGuesses[0], initialGuesses[1], Precision);
+            SecantMethod secantObj = new SecantMethod(Function, relativeError, maxIterations, initialGuesses[0],
+                    initialGuesses[1], Precision);
             ans = secantObj.solve();
-            if( !secantObj.isValid() ){ rootValidity = false; }
-            outputX = ans.get( ans.size() - 1 )[5];
-            gotTime = secantObj.getTime();
+            if (!secantObj.isValid()) {
+                rootValidity = false;
+            } else {
+                outputX = ans.get(ans.size() - 1)[5];
+                gotTime = secantObj.getTime();
+            }
+
         }
     }
 
@@ -114,11 +134,11 @@ public class showAnswer implements ActionListener {
         methodUsedLab.setBounds(400, 100, 600, 50); ////
         methodUsedLab.setHorizontalAlignment(JLabel.CENTER);
         methodUsedLab.setForeground(Color.white);
-        methodUsedLab.setFont( new Font("Times New Roman", Font.ITALIC, 35) );
+        methodUsedLab.setFont(new Font("Times New Roman", Font.ITALIC, 35));
         Logic.add(methodUsedLab);
 
         // method used button
-        methodUsedBut = new MyButton( wantedMethod );
+        methodUsedBut = new MyButton(wantedMethod);
         methodUsedBut.setBounds(400, 170, 600, 50);
         methodUsedBut.setEnabled(false);
         displayAnswerColor(methodUsedBut, 30);
@@ -133,7 +153,7 @@ public class showAnswer implements ActionListener {
         Logic.add(solutionLab);
 
         // solution button
-        solutionBut = new MyButton( Double.toString(outputX) );
+        solutionBut = new MyButton(Double.toString(outputX));
         solutionBut.setBounds(400, 310, 600, 50);
         solutionBut.setEnabled(false);
         displayAnswerColor(solutionBut, 30);
@@ -148,7 +168,7 @@ public class showAnswer implements ActionListener {
         Logic.add(timeComplexityLab);
 
         // time complexity button
-        timeComplexityBut = new MyButton( Double.toString(gotTime / 1e6) + " in ms" );
+        timeComplexityBut = new MyButton(Double.toString(gotTime / 1e6) + " in ms");
         timeComplexityBut.setBounds(400, 450, 600, 50);
         timeComplexityBut.setEnabled(false);
         displayAnswerColor(timeComplexityBut, 30);
@@ -179,7 +199,6 @@ public class showAnswer implements ActionListener {
 
         editButtonsDisplay();
 
-
     }
 
     @Override
@@ -196,19 +215,19 @@ public class showAnswer implements ActionListener {
         anotherMethodBut.setVisible(false);
         newProblemBut.setVisible(false);
 
-        if( e.getSource() == plotBut ){
+        if (e.getSource() == plotBut) {
             // wait plot python.
-        } else if( e.getSource() == showStepsBut ){
+        } else if (e.getSource() == showStepsBut) {
             new steps(ans);
-        } else if( e.getSource() == anotherMethodBut ) {
+        } else if (e.getSource() == anotherMethodBut) {
             new methodToSolve();
-        } else if( e.getSource() == newProblemBut ) {
+        } else if (e.getSource() == newProblemBut) {
             new rootsGlobalData();
         }
     }
 
-    public void displayAnswerColor(MyButton but, int size){
-        but.setFont( new Font("Times New Roman", Font.PLAIN, 30) );
+    public void displayAnswerColor(MyButton but, int size) {
+        but.setFont(new Font("Times New Roman", Font.PLAIN, 30));
         but.setRadius(40);
         but.setBorder(null);
         but.setForeground(new Color(255, 255, 255));
@@ -219,7 +238,7 @@ public class showAnswer implements ActionListener {
         Logic.add(but);
     }
 
-    private void ButtonDisplay(MyButton but){
+    private void ButtonDisplay(MyButton but) {
         but.setRadius(200);
         but.setForeground(Color.white);
         but.setBackground(GlobalFrame.secUsedColor);
@@ -231,7 +250,7 @@ public class showAnswer implements ActionListener {
         Logic.add(but);
     }
 
-    public void editButtonsDisplay(){
+    public void editButtonsDisplay() {
         tempBut = new JButton();
         tempBut.setBounds(1600, 900, 0, 1);
         tempBut.setBackground(GlobalFrame.background);
@@ -239,6 +258,5 @@ public class showAnswer implements ActionListener {
         tempBut.setEnabled(false);
         Logic.add(tempBut);
     }
-
 
 }

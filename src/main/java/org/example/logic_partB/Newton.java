@@ -15,8 +15,9 @@ public class Newton {
     private double es;
     private int pres;
     private boolean errorStop = false;
+    long time = 0;
 
-    // array of each step xi, f(xi), fdash(xi), fxi+1, error
+    // array of each step xi, f(xi), fdash(xi), xi+1, error
     private ArrayList<double[]> ans = new ArrayList<double[]>();
 
     // check for errors
@@ -31,7 +32,7 @@ public class Newton {
     }
 
     // constructor for relative error stoping criteria
-    public Newton( String fx, double es, int nOfItirations, double x0, int pres) {
+    public Newton(String fx, double es, int nOfItirations, double x0, int pres) {
         this.x0 = x0;
         this.fx = fx;
         this.nOfItirations = nOfItirations;
@@ -42,6 +43,10 @@ public class Newton {
 
     public boolean isValid() {
         return valid;
+    }
+
+    public long getTime() {
+        return time;
     }
 
     private void getRoot() {
@@ -58,7 +63,7 @@ public class Newton {
             double dfxi = calculate.getDerivativeOutput(xold);
             if (dfxi == 0) {
                 valid = false;
-                System.out.println( "in drivative = 0" );
+                System.out.println("in drivative = 0");
                 return;
             }
             xnew = approximation.sigFig(xold - (fxi / dfxi), pres);
@@ -89,7 +94,9 @@ public class Newton {
             e.printStackTrace();
             return null;
         }
+        time = System.currentTimeMillis();
         getRoot();
+        time = System.currentTimeMillis() - time;
 
         if (!valid) {
             System.out.println("error in newton");
