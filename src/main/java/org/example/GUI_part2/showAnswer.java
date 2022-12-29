@@ -3,6 +3,7 @@ package org.example.GUI_part2;
 import org.example.GUI.GlobalFrame;
 import org.example.GUI.MyButton;
 import org.example.logic_partB.*;
+import org.example.plot.PlotGraph;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -216,7 +217,38 @@ public class showAnswer implements ActionListener {
         newProblemBut.setVisible(false);
 
         if (e.getSource() == plotBut) {
-            // wait plot python.
+            PlotGraph plotObj = new PlotGraph();
+
+            if (wantedMethod == "Bisection") {
+
+                plotObj.plotBisection(Function, ans.get(0)[1], ans.get(0)[2], ans.get(ans.size() - 1)[1],
+                        ans.get(ans.size() - 1)[2]);
+
+            } else if (wantedMethod == "False-Position") {
+                plotObj.plotFalsePosition(Function, ans.get(0)[1], ans.get(0)[2], ans.get(ans.size() - 1)[1],
+                        ans.get(ans.size() - 1)[2]);
+
+            } else if (wantedMethod == "Fixed Point") {
+                if (ans.size() - 1 != 0) {
+                    plotObj.plotFixedPoint(Function, ans.get(ans.size() - 1)[2],
+                            ans.get(ans.size() - 1 - 1)[1],
+                            ans.get(ans.size() - 1 - 1)[1]);
+                } else {
+                    plotObj.plotFixedPoint(Function, ans.get(ans.size() - 1)[2],
+                            FixedPoint.getGuess(),
+                            0);
+                }
+
+            } else if (wantedMethod == "Newton-Raphson") {
+
+                plotObj.plotNewton(Function, ans.get(ans.size() - 1)[4], ans.get(ans.size() - 1)[1]);
+
+            } else if (wantedMethod == "Secant Method") {
+
+                plotObj.plotSecant(Function, ans.get(ans.size() - 1)[5], ans.get(ans.size() - 1)[1],
+                        ans.get(ans.size() - 1)[2]);
+
+            }
         } else if (e.getSource() == showStepsBut) {
             new steps(ans);
         } else if (e.getSource() == anotherMethodBut) {
