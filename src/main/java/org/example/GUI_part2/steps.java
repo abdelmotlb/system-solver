@@ -213,9 +213,8 @@ public class steps implements ActionListener {
                                 arrayList.get(i - 1)[1],
                                 arrayList.get(i - 1)[1]);
                     } else {
-                        ////// ************************** I need the initial guess
                         plotObj.plotFixedPoint(Function, arrayList.get(arrayList.size() - 1)[2],
-                                0,
+                                FixedPoint.getGuess(),
                                 0);
                     }
 
