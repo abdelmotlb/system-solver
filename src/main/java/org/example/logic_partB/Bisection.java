@@ -26,12 +26,10 @@ public class Bisection {
         return validVar;
     }
 
-    private boolean checkIsValid(){
-        return ( getFunctionOutput(fX, Xl) * getFunctionOutput(fX, Xu) < 0 );
+    private boolean checkIsValid() {
+        return (getFunctionOutput(fX, Xl) * getFunctionOutput(fX, Xu) < 0);
 
     }
-
-
 
     public Bisection(String fX, double epsilon, int iterations, double xl, double xu, int precision) {
         this.fX = fX;
@@ -42,11 +40,11 @@ public class Bisection {
         this.precision = precision;
     }
 
-    private void algorithm(){
+    private void algorithm() {
 
         // first condition check
         validVar = true;
-        if( !checkIsValid() ){
+        if (!checkIsValid()) {
             validVar = false;
             return;
         }
@@ -55,32 +53,40 @@ public class Bisection {
         double prev_Xr;
         int iterationsEnded = 0;
         double f_Xr, f_Xl, f_Xu;
-        do{
+        do {
 
             double[] iterationValues = new double[8];
 
             // get prev xr
             prev_Xr = Xr;
-            f_Xl = approximation.sigFig( getFunctionOutput(fX, Xl), precision );
-            f_Xu = approximation.sigFig( getFunctionOutput(fX, Xu), precision );
+            f_Xl = approximation.sigFig(getFunctionOutput(fX, Xl), precision);
+            f_Xu = approximation.sigFig(getFunctionOutput(fX, Xu), precision);
 
             // iteration algorithm
-            Xr =  (Xl + Xu)/2;
+            Xr = (Xl + Xu) / 2;
             Xr = approximation.sigFig(Xr, precision);
-            f_Xr = approximation.sigFig( getFunctionOutput(fX, Xr), precision );
-//            System.out.println("Xl : " +Xl+" Xr : "+ Xr + " Xu :     "+Xu);
+            f_Xr = approximation.sigFig(getFunctionOutput(fX, Xr), precision);
+            // System.out.println("Xl : " +Xl+" Xr : "+ Xr + " Xu : "+Xu);
 
-            if( f_Xr * f_Xl < 0 ){
+            if (f_Xr * f_Xl < 0) {
                 Xu = Xr;
-            }
-            else if( f_Xr * f_Xl > 0 ){
+            } else if (f_Xr * f_Xl > 0) {
                 Xl = Xr;
-            }else{
+            } else {
+                iterationValues[0] = iterationsEnded;
+                iterationValues[1] = Xl;
+                iterationValues[2] = Xu;
+                iterationValues[3] = Xr;
+                iterationValues[4] = f_Xl;
+                iterationValues[5] = f_Xu;
+                iterationValues[6] = f_Xr;
+                iterationValues[7] = Xr - prev_Xr;
+                arrList.add(iterationValues);
                 return;
             }
             iterationsEnded++;
 
-            //continue another iteration
+            // continue another iteration
             iterationValues[0] = iterationsEnded;
             iterationValues[1] = Xl;
             iterationValues[2] = Xu;
@@ -88,13 +94,13 @@ public class Bisection {
             iterationValues[4] = f_Xl;
             iterationValues[5] = f_Xu;
             iterationValues[6] = f_Xr;
-            iterationValues[7] = Xr-prev_Xr;
+            iterationValues[7] = Xr - prev_Xr;
             arrList.add(iterationValues);
 
-        }while( Math.abs( Xr - prev_Xr ) > Epsilon && iterationsEnded < Iterations );
+        } while (Math.abs(Xr - prev_Xr) > Epsilon && iterationsEnded < Iterations);
     }
 
-    public ArrayList<double[]> solve(){
+    public ArrayList<double[]> solve() {
         time = System.nanoTime();
 
         algorithm();

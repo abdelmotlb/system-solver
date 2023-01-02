@@ -20,7 +20,7 @@ public class FixedPoint {
     double Epsilon = 0.00001;// default
     private ArrayList<double[]> arrList = new ArrayList<double[]>();
     int precision;
-    double xn, xp;
+    double xn;
     boolean epsFlag = false;
 
     public FixedPoint() {
@@ -41,6 +41,7 @@ public class FixedPoint {
         this.gX = gX;
         this.precision = precision;
         this.Iterations = Iterations;
+        this.guess = guess;
     }
 
     // temp arrays containing the states of each iterations
